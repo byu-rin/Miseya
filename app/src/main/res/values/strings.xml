@@ -1,0 +1,25 @@
+<resources>
+    <string name="app_name">Miseya</string>
+    <string name="shame">- ㎍/㎥</string>
+    <string name="city_select">도시를 선택해 주세요.</string>
+    <string-array name="Sido">
+        <item>전국</item>
+        <item>서울</item>
+        <item>부산</item>
+        <item>대구</item>
+        <item>인천</item>
+        <item>광주</item>
+        <item>대전</item>
+        <item>울산</item>
+        <item>세종</item>
+        <item>경기도</item>
+        <item>강원도</item>
+        <item>충북</item>
+        <item>충남</item>
+        <item>전북</item>
+        <item>전남</item>
+        <item>경북</item>
+        <item>경남</item>
+        <item>제주</item>
+    </string-array>
+</resources>
