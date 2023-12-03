@@ -1,4 +1,6 @@
-# Dust notification app / Miseya - 미세먼지 알림 서비스
+## Dust notification app / Miseya - 미세먼지 알림 서비스
+
+<br><br>
 
 ## 서비스 소개
 사용자가 선택한 지역의 미세먼지 농도를 표시해주는 서비스입니다.
@@ -34,7 +36,7 @@ https://github.com/byu-rin/Miseya/assets/130144220/3e08039a-df93-4c24-a137-cc413
 
    ## 주요 기술
 * Retrofit : '@GET()'은 HTTP GET 요청을 수행하는 엔드포인트 정의
-* Coroutine : 'suspend' 키워드를 이용하여 코루틴에서 호출.
+* Coroutine : 'suspend' 키워드를 이용하여 코루틴에서 호출
 * Spinner : 대기질 정보를 보기 위해 지역(도,시,군)을 선택하는 데 사용
 * Retrofit : 대기 질 데이터를 가져오기 위한 네트워크 호출
 * Coroutine : ('lifecycleScope.launch') 활용하여 UI가 반응적으로 유지
