@@ -5,7 +5,7 @@ plugins {
 
 android {
     namespace = "com.example.miseya"
-    compileSdk = 33
+    compileSdk = 34
 
     defaultConfig {
         applicationId = "com.example.miseya"
@@ -31,7 +31,7 @@ android {
         targetCompatibility = JavaVersion.VERSION_1_8
     }
     kotlinOptions {
-        jvmTarget = "1.8"
+        jvmTarget = "1.8" //19
     }
 
     buildFeatures {
@@ -41,10 +41,9 @@ android {
     }
 
     composeOptions {
-        kotlinCompilerExtensionVersion = "1.1.0-alpha03"
+        kotlinCompilerExtensionVersion = "1.5.12"
     }
 }
-
 
 dependencies {
 
@@ -62,6 +61,26 @@ dependencies {
     implementation("com.squareup.okhttp3:logging-interceptor:4.10.0")
     implementation("com.github.skydoves:powerspinner:1.2.6")
 
-    //compose
-    implementation("androidx.compose.ui:ui:1.6.6")
+    val composeBom = platform("androidx.compose:compose-bom:2024.04.01")
+    val composeVersion = "1.6.6"
+    implementation(composeBom)
+    androidTestImplementation(composeBom)
+
+    // material design
+    implementation("androidx.compose.ui:ui:$composeVersion")
+    implementation("androidx.compose.material:material:$composeVersion")
+
+    // Android Studio Preview support
+    implementation("androidx.compose.ui:ui-tooling-preview:$composeVersion")
+    debugImplementation("androidx.compose.ui:ui-tooling:$composeVersion")
+
+    // Optional - Integration with activities
+    implementation ("androidx.activity:activity-compose:1.9.0")
+// Optional - Integration with ViewModels
+    implementation ("androidx.lifecycle:lifecycle-viewmodel-compose:2.7.0")
+
+    // UI Tests
+    androidTestImplementation("androidx.compose.ui:ui-test-junit4:$composeVersion")
+    debugImplementation("androidx.compose.ui:ui-test-manifest")
+
 }
