@@ -36,10 +36,10 @@ android {
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro")
-                buildConfigField("String", "API_KEY", "http://apis.data.go.kr/B552584/ArpltnInforInqireSvc/")
+                buildConfigField("String", "API_KEY", "api_key")
         }
         debug {
-            buildConfigField("String", "API_KEY", "\"http://apis.data.go.kr/B552584/ArpltnInforInqireSvc/\"")
+            buildConfigField("String", "API_KEY", "\"api_key/\"")
         }
     }
     compileOptions {
