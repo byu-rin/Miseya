@@ -43,5 +43,4 @@ object NetWorkClient {
 
     // Retrofit 인터페이스 구현한 NetWorkInterface 객체를 생성
     val dustNetWork: NetWorkInterface = dustRetrofit.create(NetWorkInterface::class.java)
-
 }
