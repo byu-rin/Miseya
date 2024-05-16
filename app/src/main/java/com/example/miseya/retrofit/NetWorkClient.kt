@@ -10,8 +10,8 @@ import java.util.concurrent.TimeUnit
 
 object NetWorkClient {
 
-    // 공공데이터포털에서 발급받은 API 키
-    private const val DUST_BASE_URL = "api key"
+    // api end point
+    private const val DUST_BASE_URL = "http://apis.data.go.kr/B552584/ArpltnInforInqireSvc/"
 
     // OkHttpClient를 생성하는 함수
     private fun createOkHttpClient(): OkHttpClient {

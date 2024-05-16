@@ -16,6 +16,7 @@ import androidx.compose.material.DropdownMenuItem
 import androidx.compose.material.Surface
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -34,7 +35,7 @@ class MainActivity : ComponentActivity() {
         setContent {
             Surface(
                 modifier = Modifier.fillMaxSize(),
-                color = Color(0xFF9ED2EC)
+                color = Color(0xFF9ED2EC) // 화면 배경색
             ) {
                 MainContent()
             }
@@ -45,34 +46,21 @@ class MainActivity : ComponentActivity() {
 @Composable
 fun MainContent(viewModel: MainViewModel = MainViewModel()) {
     Column(modifier = Modifier.fillMaxWidth().padding(16.dp)) {
-        val cities = listOf("서울", "부산", "대구")
-        val areas = listOf("강남구", "해운대구", "수성구")
-
-        var selectedCity by remember { mutableStateOf<String?>(null) }
-        var selectedArea by remember { mutableStateOf<String?>(null) }
-
-        // CitySpinner와 AreaSpinner를 수평으로 정렬하는 Row
+        // 도시와 구역 스피너를 수평으로 배열
         Row(modifier = Modifier.fillMaxWidth()) {
             CitySpinner(
-                cities = cities,
+                cities = viewModel.cities,
                 onCitySelected = { city ->
-                    selectedCity = city
-                    selectedArea?.let { area ->
-                        viewModel.loadDustInfo(city, area)
-                    }
+                    viewModel.setSelectedCity(city)
                 },
-                modifier = Modifier.weight(1f)  // weight 적용
+                modifier = Modifier.weight(1f)
             )
-//            Spacer(modifier = Modifier.width(16.dp))
             AreaSpinner(
-                areas = areas,
-                onAreaSelected = { areas ->
-                    selectedArea = areas
-                    selectedCity?.let { city ->
-                        viewModel.loadDustInfo(city, areas)
-                    }
+                areas = viewModel.areas.collectAsState().value,
+                onAreaSelected = { area ->
+                    viewModel.loadDustInfo(area)
                 },
-                modifier = Modifier.weight(1f)  // weight 적용
+                modifier = Modifier.weight(1f)
             )
         }
     }
