@@ -29,7 +29,7 @@ class MainViewModel : ViewModel() {
     val selectedCity: StateFlow<String?> = _selectedCity.asStateFlow()
 
     private val _isLoading = MutableStateFlow(false)
-    val isLoading: StateFlow<Boolean> = _isLoading.asStateFlow()
+//    val isLoading: StateFlow<Boolean> = _isLoading.asStateFlow()
 
     // 도시가 선택되면 호출되는 함수
     fun setSelectedCity(city: String) {
