@@ -7,6 +7,7 @@ import com.example.miseya.retrofit.NetWorkClient
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.launch
 import java.net.URLEncoder
 
@@ -28,16 +29,39 @@ class MainViewModel : ViewModel() {
     private val _selectedCity = MutableStateFlow<String?>(null)
     val selectedCity: StateFlow<String?> = _selectedCity.asStateFlow()
 
-    private val _isLoading = MutableStateFlow(false)
-//    val isLoading: StateFlow<Boolean> = _isLoading.asStateFlow()
+    // 현재 선택된 지역을 저장하는 MutableStateFlow
+    private val _selectedArea = MutableStateFlow<String?>(null)
+    val selectedArea: StateFlow<String?> = _selectedArea.asStateFlow()
 
-    // 도시가 선택되면 호출되는 함수
+    private val _isLoading = MutableStateFlow(false)
+    val isLoading: StateFlow<Boolean> = _isLoading.asStateFlow()
+
+//    init {
+//        viewModelScope.launch {
+//            combine(_selectedCity, _selectedArea) { city, area ->
+//                city to area
+//            }.collect { (city, area) ->
+//                if (city != null && area != null) {
+//                    Log.i("SelectionInfo", "City: $city, Area: $area")
+//                }
+//            }
+//        }
+//    }
+
+    // 도시가 선택 시 도시에 따른 지역 정보 업데이트
     fun setSelectedCity(city: String) {
         _selectedCity.value = city
+        Log.i("MainViewModel", "Selected City: $city")
         updateAreasForCity(city)
     }
 
-    // 도시에 따라 해당 지역의 구역 정보를 업데이트하는 함수
+    // 지역 선택 처리
+    fun setSelectedArea(area: String) {
+        Log.i("MainViewModel", "Selected Area: $area")
+        _selectedArea.value = area
+    }
+
+    // 선택된 도시 따라 지역 정보 업데이트
     private fun updateAreasForCity(city: String) {
         when (city) {
             "서울" -> _areas.value = listOf("강남구", "서초구", "강서구", "마포구", "동작구")
@@ -48,7 +72,7 @@ class MainViewModel : ViewModel() {
         }
     }
 
-    // 지역에 따른 미세먼지 정보를 로드하는 함수
+    // 지역의 미세먼지 정보 로드
     fun loadDustInfo(area: String) = viewModelScope.launch {
         _isLoading.value = true
         selectedCity.value?.let { city ->
@@ -66,7 +90,7 @@ class MainViewModel : ViewModel() {
         }
     }
 
-    // API 호출 시 필요한 파라미터를 설정하는 함수
+    // API 호출 파라미터
     private fun setUpDustParameter(sido: String, stationName: String): HashMap<String, String> {
         return hashMapOf(
             "serviceKey" to encodedApiKey,

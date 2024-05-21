@@ -51,14 +51,15 @@ fun MainContent(viewModel: MainViewModel = MainViewModel()) {
             CitySpinner(
                 cities = viewModel.cities,
                 onCitySelected = { city ->
-                    viewModel.setSelectedCity(city)
+                    viewModel.setSelectedCity(city) // 도시 선택 시 처리
                 },
                 modifier = Modifier.weight(1f)
             )
             AreaSpinner(
                 areas = viewModel.areas.collectAsState().value,
                 onAreaSelected = { area ->
-                    viewModel.loadDustInfo(area)
+                    viewModel.setSelectedArea(area) // 구역 선택 시 처리
+                    viewModel.loadDustInfo(area) // 미세먼지 정보 로드
                 },
                 modifier = Modifier.weight(1f)
             )
