@@ -25,7 +25,7 @@ android {
         }
         val apiKey = localProperties.getProperty("api_key") ?: "No API Key"
 
-        buildConfigField("String", "API_KEY", "\"apiKey\"")
+        buildConfigField("String", "API_KEY", "\"DUST_API_KEY\"")
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }

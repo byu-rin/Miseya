@@ -12,7 +12,7 @@ import kotlinx.coroutines.launch
 import java.net.URLEncoder
 
 class MainViewModel : ViewModel() {
-    private val api_key = "OHeogT6EGM6my3ZyT0ATWQAW5BG7aqbnJny3WoYtxLthtOuc8uqK8irZieJUUPxAfLZJugVlo7MN0776O0dZqg=="
+    private val api_key = BuildConfig.API_KEY
     private val encodedApiKey = URLEncoder.encode(api_key, "UTF-8")
 
     // 대한민국 주요 도시 목록
