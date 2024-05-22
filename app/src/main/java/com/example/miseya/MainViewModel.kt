@@ -13,7 +13,6 @@ import java.net.URLEncoder
 
 class MainViewModel : ViewModel() {
     private val api_key = BuildConfig.API_KEY
-    private val encodedApiKey = URLEncoder.encode(api_key, "UTF-8")
 
     // 대한민국 주요 도시 목록
     val cities = listOf(
@@ -93,7 +92,7 @@ class MainViewModel : ViewModel() {
     // API 호출 파라미터
     private fun setUpDustParameter(sido: String, stationName: String): HashMap<String, String> {
         return hashMapOf(
-            "serviceKey" to encodedApiKey,
+            "serviceKey" to api_key,
             "returnType" to "json",
             "numOfRows" to "100",
             "pageNo" to "1",
