@@ -1,4 +1,5 @@
 import com.google.api.AnnotationsProto.http
+import java.io.FileInputStream
 import java.util.Properties
 
 plugins {
@@ -10,23 +11,18 @@ android {
     namespace = "com.example.miseya"
     compileSdk = 34
 
+    // local.properties에서 API_KEY 읽어오기
+    val localProperties = Properties()
+    localProperties.load(FileInputStream(rootProject.file("local.properties")))
+
     defaultConfig {
         applicationId = "com.example.miseya"
         minSdk = 30
         targetSdk = 33
         versionCode = 1
         versionName = "1.0"
-
-        // local.properties에서 API_KEY 읽어오기
-        val localProperties = Properties()
-        val localPropertiesFile = rootProject.file("local.properties")
-        if (localPropertiesFile.exists()) {
-            localProperties.load(localPropertiesFile.inputStream())
-        }
-        val apiKey = localProperties.getProperty("api_key") ?: "No API Key"
-
-        buildConfigField("String", "API_KEY", "\"DUST_API_KEY\"")
-
+        buildConfigField("String", "API_KEY", "api_key")
+        vectorDrawables.useSupportLibrary = true
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
 
@@ -54,6 +50,7 @@ android {
         viewBinding = true
         dataBinding = true
         compose = true
+        buildConfig = true
     }
 
     composeOptions {
