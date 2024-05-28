@@ -7,9 +7,7 @@ import com.example.miseya.retrofit.NetWorkClient
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.launch
-import java.net.URLEncoder
 
 class MainViewModel : ViewModel() {
     private val api_key = "OHeogT6EGM6my3ZyT0ATWQAW5BG7aqbnJny3WoYtxLthtOuc8uqK8irZieJUUPxAfLZJugVlo7MN0776O0dZqg=="
@@ -79,14 +77,44 @@ class MainViewModel : ViewModel() {
                 val response = NetWorkClient.dustNetWork.getDust(setUpDustParameter(city, area))
                 response.let {
                     // Handle the successful response
-                    Log.i("DustInfo", "Data for $area, $city: ${it}")
+                    Log.i("DustInfo", "Data for $area, $city: ${classifyAirQuality(60, 60, 0.0)}")
                 }
+//                if (response.isSuccessful && response.body() != null) {
+//                    response.body()?.dustBody?.dustItem?.forEach { dustItem ->
+//                        val pm10Value = dustItem.pm10Value.toIntOrNull()
+//                        val pm25Value = dustItem.pm25Value.toIntOrNull()
+//                        val o3Value = dustItem.o3Value.toDoubleOrNull()
+//                        val airQuality = classifyAirQuality(pm10Value, pm25Value, o3Value)
+//                        Log.i("MainViewModel", "Air Quality for $area, $city: $airQuality")
+//                    }
+//                } else {
+//                    Log.e(
+//                        "MainViewModel",
+//                        "Failed to fetch dust info: ${response.errorBody()?.string()}"
+//                    )
+//                }
             } catch (e: Exception) {
                 Log.e("MainViewModel", "Error fetching dust info for $area, $city", e)
             } finally {
                 _isLoading.value = false
             }
         }
+//            val response = NetWorkClient.dustNetWork.getDust(setUpDustParameter(city, area))
+//            if (response.isSuccessful) {
+//                response.body()?.let { dustResponse ->
+//                    val item = dustResponse.response.body.items.item.firstOrNull()
+//                    val pm10Value = item?.pm10Value?.toIntorNull()
+//                    val pm25Value = item?.pm25Value?.toIntorNull()
+//                    val o3Value = item?.o3Value?.toDouble()
+//                    val airQuality = classifyAirQuality(pm10Value, pm25Value, o3Value)
+//                    Log.i("MainViewModel", "Air Quality: $airQuality")
+//                }
+//            } else {
+//                Log.e(
+//                    "MainViewModel",
+//                    "API Request failed with error ${response.code()} : ${response.message()}"
+//                )
+//            }
     }
 
     // API 호출 파라미터
@@ -101,5 +129,33 @@ class MainViewModel : ViewModel() {
             "dataTerm" to "daily",
             "ver" to "1.3"
         )
+    }
+
+    fun classifyAirQuality(pm10Value: Int?, pm25Value: Int?, o3Value: Double?): String {
+        val pm10Grade = when {
+            pm10Value == null -> "데이터 없음"
+            pm10Value <= 30 -> "좋음"
+            pm10Value <= 80 -> "보통"
+            pm10Value <= 150 -> "나쁨"
+            else -> "매우 나쁨"
+        }
+
+        val pm25Grade = when {
+            pm25Value == null -> "데이터 없음"
+            pm25Value <= 15 -> "좋음"
+            pm25Value <= 35 -> "보통"
+            pm25Value <= 75 -> "나쁨"
+            else -> "매우 나쁨"
+        }
+
+        val o3Grade = when {
+            o3Value == null -> "데이터 없음"
+            o3Value <= 0.030 -> "좋음"
+            o3Value <= 0.090 -> "보통"
+            o3Value <= 0.150 -> "나쁨"
+            else -> "매우 나쁨"
+        }
+
+        return "PM10: $pm10Grade, PM2.5: $pm25Grade, O3: $o3Grade"
     }
 }
