@@ -1,12 +1,16 @@
 package com.example.miseya
 
+import DustItem
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.miseya.retrofit.NetWorkClient
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 
 class MainViewModel : ViewModel() {
@@ -33,17 +37,10 @@ class MainViewModel : ViewModel() {
     private val _isLoading = MutableStateFlow(false)
     val isLoading: StateFlow<Boolean> = _isLoading.asStateFlow()
 
-//    init {
-//        viewModelScope.launch {
-//            combine(_selectedCity, _selectedArea) { city, area ->
-//                city to area
-//            }.collect { (city, area) ->
-//                if (city != null && area != null) {
-//                    Log.i("SelectionInfo", "City: $city, Area: $area")
-//                }
-//            }
-//        }
-//    }
+    // API로부터 받은 데이터를 저장하는 MutableStateFlow
+    private val _dustData = MutableStateFlow<DustItem?>(null)
+    val dustData: StateFlow<DustItem?> = _dustData.asStateFlow()
+
 
     // 도시가 선택 시 도시에 따른 지역 정보 업데이트
     fun setSelectedCity(city: String) {
@@ -56,6 +53,7 @@ class MainViewModel : ViewModel() {
     fun setSelectedArea(area: String) {
         Log.i("MainViewModel", "Selected Area: $area")
         _selectedArea.value = area
+        loadDustInfo(area)
     }
 
     // 선택된 도시 따라 지역 정보 업데이트
@@ -79,42 +77,12 @@ class MainViewModel : ViewModel() {
                     // Handle the successful response
                     Log.i("DustInfo", "Data for $area, $city: ${classifyAirQuality(60, 60, 0.0)}")
                 }
-//                if (response.isSuccessful && response.body() != null) {
-//                    response.body()?.dustBody?.dustItem?.forEach { dustItem ->
-//                        val pm10Value = dustItem.pm10Value.toIntOrNull()
-//                        val pm25Value = dustItem.pm25Value.toIntOrNull()
-//                        val o3Value = dustItem.o3Value.toDoubleOrNull()
-//                        val airQuality = classifyAirQuality(pm10Value, pm25Value, o3Value)
-//                        Log.i("MainViewModel", "Air Quality for $area, $city: $airQuality")
-//                    }
-//                } else {
-//                    Log.e(
-//                        "MainViewModel",
-//                        "Failed to fetch dust info: ${response.errorBody()?.string()}"
-//                    )
-//                }
             } catch (e: Exception) {
                 Log.e("MainViewModel", "Error fetching dust info for $area, $city", e)
             } finally {
                 _isLoading.value = false
             }
         }
-//            val response = NetWorkClient.dustNetWork.getDust(setUpDustParameter(city, area))
-//            if (response.isSuccessful) {
-//                response.body()?.let { dustResponse ->
-//                    val item = dustResponse.response.body.items.item.firstOrNull()
-//                    val pm10Value = item?.pm10Value?.toIntorNull()
-//                    val pm25Value = item?.pm25Value?.toIntorNull()
-//                    val o3Value = item?.o3Value?.toDouble()
-//                    val airQuality = classifyAirQuality(pm10Value, pm25Value, o3Value)
-//                    Log.i("MainViewModel", "Air Quality: $airQuality")
-//                }
-//            } else {
-//                Log.e(
-//                    "MainViewModel",
-//                    "API Request failed with error ${response.code()} : ${response.message()}"
-//                )
-//            }
     }
 
     // API 호출 파라미터

@@ -1,10 +1,5 @@
 package com.android.miseya
 
-/*
-Surface : 배경핵, 그림자, 모양, 테두리 적용 (UI 캔버스)
-Column : 컴포저블 수직 배열 (CenterHorizontally 중앙 정렬, Arrangement.Top
- */
-
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
