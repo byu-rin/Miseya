@@ -6,11 +6,8 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.miseya.retrofit.NetWorkClient
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.map
-import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 
 class MainViewModel : ViewModel() {
@@ -72,11 +69,6 @@ class MainViewModel : ViewModel() {
         _isLoading.value = true
         selectedCity.value?.let { city ->
             try {
-                val response = NetWorkClient.dustNetWork.getDust(setUpDustParameter(city, area))
-                response.let {
-                    // Handle the successful response
-                    Log.i("DustInfo", "Data for $area, $city: ${classifyAirQuality(60, 60, 0.0)}")
-                }
             } catch (e: Exception) {
                 Log.e("MainViewModel", "Error fetching dust info for $area, $city", e)
             } finally {
@@ -97,33 +89,5 @@ class MainViewModel : ViewModel() {
             "dataTerm" to "daily",
             "ver" to "1.3"
         )
-    }
-
-    fun classifyAirQuality(pm10Value: Int?, pm25Value: Int?, o3Value: Double?): String {
-        val pm10Grade = when {
-            pm10Value == null -> "데이터 없음"
-            pm10Value <= 30 -> "좋음"
-            pm10Value <= 80 -> "보통"
-            pm10Value <= 150 -> "나쁨"
-            else -> "매우 나쁨"
-        }
-
-        val pm25Grade = when {
-            pm25Value == null -> "데이터 없음"
-            pm25Value <= 15 -> "좋음"
-            pm25Value <= 35 -> "보통"
-            pm25Value <= 75 -> "나쁨"
-            else -> "매우 나쁨"
-        }
-
-        val o3Grade = when {
-            o3Value == null -> "데이터 없음"
-            o3Value <= 0.030 -> "좋음"
-            o3Value <= 0.090 -> "보통"
-            o3Value <= 0.150 -> "나쁨"
-            else -> "매우 나쁨"
-        }
-
-        return "PM10: $pm10Grade, PM2.5: $pm25Grade, O3: $o3Grade"
     }
 }
