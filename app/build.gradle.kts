@@ -12,8 +12,8 @@ android {
     compileSdk = 34
 
     // local.properties에서 API_KEY 읽어오기
-    val localProperties = Properties()
-    localProperties.load(FileInputStream(rootProject.file("local.properties")))
+    val properties = Properties()
+    properties.load(FileInputStream(rootProject.file("local.properties")))
 
     defaultConfig {
         applicationId = "com.example.miseya"
@@ -21,7 +21,7 @@ android {
         targetSdk = 33
         versionCode = 1
         versionName = "1.0"
-        buildConfigField("String", "API_KEY", "api_key")
+        buildConfigField("String", "API_KEY", properties.getProperty("api_key"))
         vectorDrawables.useSupportLibrary = true
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
