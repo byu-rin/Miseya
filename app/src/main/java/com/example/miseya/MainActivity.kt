@@ -1,6 +1,7 @@
 package com.android.miseya
 
 import android.os.Bundle
+import android.widget.Spinner
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.Image
@@ -82,18 +83,14 @@ fun CityAreaSpinners(viewModel: MainViewModel) {
         Spinner(
             items = viewModel.cities,
             label = "도시 선택",
-            onItemSelected =
-            viewModel::setSelectedCity,
+            onItemSelected = viewModel::setSelectedCity,
             modifier = Modifier.weight(1f) // Row 내에서 공간을 공평하게 나누기
         )
 
         Spinner(
             items = viewModel.areas.collectAsState().value,
             label = "지역 선택",
-            onItemSelected = {
-                viewModel.setSelectedArea(it)
-                viewModel.loadDustInfo(it)
-            },
+            onItemSelected = viewModel::setSelectedArea,
             modifier = Modifier.weight(1f) // Row 내에서 공간을 공평하게 나누기
         )
     }
@@ -141,6 +138,7 @@ fun ImogeExample() {
         modifier = Modifier.size(200.dp, 200.dp),
         contentAlignment = Alignment.Center
     ) {
+
         Image(
             painter = painterResource(id = R.drawable.mise1),
             contentDescription = "Imoge",

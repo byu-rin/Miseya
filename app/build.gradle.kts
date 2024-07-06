@@ -11,7 +11,6 @@ android {
     namespace = "com.example.miseya"
     compileSdk = 34
 
-    // local.properties에서 API_KEY 읽어오기
     val properties = Properties()
     properties.load(FileInputStream(rootProject.file("local.properties")))
 
@@ -101,4 +100,6 @@ dependencies {
     androidTestImplementation("androidx.compose.ui:ui-test-junit4:$composeVersion")
     debugImplementation("androidx.compose.ui:ui-test-manifest")
 
+    // Okhttp Profiler
+    implementation ("com.localebro:okhttpprofiler:1.0.8")
 }

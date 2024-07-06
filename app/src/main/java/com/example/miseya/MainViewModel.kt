@@ -11,7 +11,7 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 
 class MainViewModel : ViewModel() {
-    private val api_key = BuildConfig.API_KEY
+    private val api_key = "OHeogT6EGM6my3ZyT0ATWQAW5BG7aqbnJny3WoYtxLthtOuc8uqK8irZieJUUPxAfLZJugVlo7MN0776O0dZqg=="// BuildConfig.API_KEY
 
     // 대한민국 주요 도시 목록
     val cities = listOf(
@@ -42,7 +42,7 @@ class MainViewModel : ViewModel() {
     // 도시가 선택 시 도시에 따른 지역 정보 업데이트
     fun setSelectedCity(city: String) {
         _selectedCity.value = city
-        Log.i("MainViewModel", "Selected City: $city")
+//        Log.i("MainViewModel", "Selected City: $city")
         updateAreasForCity(city)
     }
 
@@ -69,10 +69,35 @@ class MainViewModel : ViewModel() {
         _isLoading.value = true
         selectedCity.value?.let { city ->
             try {
-                val response = NetWorkClient.dustNetWork.getDust(setUpDustParameter(city, area))
-                response.let {
-                    // Handle the successful response
-                    Log.i("DustInfo", "Data for $area, $city: ${classifyAirQuality(60, 60, 0.0)}")
+                val response = NetWorkClient.dustNetWork.getDust(
+                    serviceKey = api_key,
+                    returnType = "json",
+                    numOfRows = "100",
+                    pageNo = "1",
+                    sidoName = city,
+                    stationName = area,
+                    dataTerm = "daily",
+                    ver = "1.3"
+                )
+                if (response.isSuccessful) {
+                    response.body()?.let { dustResponse ->
+                        dustResponse.response.body.let { body ->
+                            val items = body.dustItem
+                            if (items != null) {
+                                val filteredItems = items.filter { it.stationName == area }
+                                Log.i("DustInfo", "Filtered Items for $area, $city: $filteredItems")
+                                if (filteredItems.isNotEmpty()) {
+                                    _dustData.value = filteredItems.first()
+                                } else {
+                                    Log.e("MainViewModel", "No items found for $area, $city")
+                                }
+                            } else {
+                                Log.e("MainViewModel", "No items found for $area, $city")
+                            }
+                        }
+                    }
+                } else {
+                    Log.e("MainViewModel", "Error: ${response.errorBody()?.string()}")
                 }
             } catch (e: Exception) {
                 Log.e("MainViewModel", "Error fetching dust info for $area, $city", e)
