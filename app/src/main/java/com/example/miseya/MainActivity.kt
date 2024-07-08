@@ -1,9 +1,9 @@
 package com.android.miseya
 
 import android.os.Bundle
-import android.widget.Spinner
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.activity.viewModels
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -32,10 +32,12 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.constraintlayout.compose.ConstraintLayout
 import com.example.miseya.MainViewModel
 import com.example.miseya.R
 
 class MainActivity : ComponentActivity() {
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
@@ -70,7 +72,7 @@ fun MainContent(viewModel: MainViewModel = MainViewModel()) {
                 modifier = Modifier.fillMaxWidth(),
                 contentAlignment = Alignment.Center
             ) {
-                ImogeExample()
+                Imoge(String())
             }
             Spacer(Modifier.weight(1f)) // 이 스페이서는 ImogeExample 아래쪽에 추가 공간을 제공합니다.
         }
@@ -133,7 +135,52 @@ fun Spinner(
 }
 
 @Composable
-fun ImogeExample() {
+fun Imoge(airQuality: String) {
+    ConstraintLayout(
+        modifier = Modifier.fillMaxSize()
+    ) {
+        val (location, date, data, level) = createRefs()
+
+        Text(
+            text = "location",
+            color = Color.Black,
+            modifier = Modifier.constrainAs(location) {
+                top.linkTo(parent.top, margin = 80.dp)
+                start.linkTo(parent.start)
+                end.linkTo(parent.end)
+            }
+        )
+
+        Text(
+            text = "date",
+            color = Color.Black,
+            modifier = Modifier.constrainAs(date) {
+                top.linkTo(location.bottom, margin = 50.dp)
+                start.linkTo(parent.start)
+                end.linkTo(parent.end)
+            }
+        )
+
+        Text(
+            text = "data",
+            color = Color.Black,
+            modifier = Modifier.constrainAs(data) {
+                bottom.linkTo(parent.bottom, margin = 160.dp)
+                start.linkTo(parent.start)
+                end.linkTo(parent.end)
+            }
+        )
+
+        Text(
+            text = "airQuality",
+            color = Color.Black,
+            modifier = Modifier.constrainAs(level) {
+                bottom.linkTo(parent.bottom, margin = 80.dp)
+                start.linkTo(parent.start)
+                end.linkTo(parent.end)
+            }
+        )
+    }
     Box(
         modifier = Modifier.size(200.dp, 200.dp),
         contentAlignment = Alignment.Center

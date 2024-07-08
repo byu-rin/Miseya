@@ -2,6 +2,8 @@ package com.example.miseya
 
 import DustItem
 import android.util.Log
+import androidx.compose.runtime.State
+import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.miseya.retrofit.NetWorkClient
@@ -57,9 +59,22 @@ class MainViewModel : ViewModel() {
     private fun updateAreasForCity(city: String) {
         when (city) {
             "서울" -> _areas.value = listOf("강남구", "서초구", "강서구", "마포구", "동작구")
-            "부산" -> _areas.value = listOf("해운대구", "남구", "북구", "서구", "동구")
-            "대구" -> _areas.value = listOf("수성구", "동구", "서구", "남구", "북구")
-            "인천" -> _areas.value = listOf("중구", "동구", "미추홀구", "연수구", "남동구")
+            "부산" -> _areas.value = listOf("광복동", "초량동", "대연동", "장림동", "연산동")
+            "대구" -> _areas.value = listOf("신암동", "내당동", "대명동", "복현동", "범어동")
+            "인천" -> _areas.value = listOf("송도동", "구월동", "부평동", "가좌동", "작전동")
+            "광주" -> _areas.value = listOf("산수동", "화정동", "주월동", "문흥동", "송정동")
+            "대전" -> _areas.value = listOf("용운동", "은행동", "둔산동", "봉명동", "송촌동")
+            "울산" -> _areas.value = listOf("학성동", "삼산동", "방어동", "명촌동", "언양읍")
+            "경기" -> _areas.value = listOf("내동", "보산동", "봉산동", "중앙동", "가평")
+            "강원" -> _areas.value = listOf("중앙동", "옥천동", "노학동", "남양동", "홍천읍")
+            "충북" -> _areas.value = listOf("흥덕구", "중앙탑면", "중앙동", "보은읍", "옥천읍")
+            "충남" -> _areas.value = listOf("동남구", "중동", "대천동", "온양동", "동문동")
+            "전북" -> _areas.value = listOf("완산구", "영등동", "금동", "요촌동", "삼례읍")
+            "전남" -> _areas.value = listOf("장흥읍", "진도읍", "신안군", "곡성읍", "목포항")
+            "경북" -> _areas.value = listOf("우현동", "장흥동", "대도동", "오천읍", "연일읍")
+            "경남" -> _areas.value = listOf("경화동", "월영동", "금성면", "동상동", "장유동")
+            "제주" -> _areas.value = listOf("이도동", "연동", "조천읍", "한림읍", "애월읍")
+            "세종" -> _areas.value = listOf("보람동", "한솔동", "전의면")
             else -> _areas.value = emptyList()
         }
     }
