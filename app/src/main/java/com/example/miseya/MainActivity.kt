@@ -3,7 +3,6 @@ package com.android.miseya
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.activity.viewModels
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -72,7 +71,7 @@ fun MainContent(viewModel: MainViewModel = MainViewModel()) {
                 modifier = Modifier.fillMaxWidth(),
                 contentAlignment = Alignment.Center
             ) {
-                Imoge(String())
+                Imoge(viewModel)
             }
             Spacer(Modifier.weight(1f)) // 이 스페이서는 ImogeExample 아래쪽에 추가 공간을 제공합니다.
         }
@@ -135,7 +134,9 @@ fun Spinner(
 }
 
 @Composable
-fun Imoge(airQuality: String) {
+fun Imoge(viewModel: MainViewModel) {
+    val airQualityClassification by viewModel.airQualityClassification.collectAsState()
+
     ConstraintLayout(
         modifier = Modifier.fillMaxSize()
     ) {
@@ -172,7 +173,7 @@ fun Imoge(airQuality: String) {
         )
 
         Text(
-            text = "airQuality",
+            text = airQualityClassification,
             color = Color.Black,
             modifier = Modifier.constrainAs(level) {
                 bottom.linkTo(parent.bottom, margin = 80.dp)

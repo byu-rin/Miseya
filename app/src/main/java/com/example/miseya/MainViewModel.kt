@@ -2,8 +2,6 @@ package com.example.miseya
 
 import DustItem
 import android.util.Log
-import androidx.compose.runtime.State
-import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.miseya.retrofit.NetWorkClient
@@ -13,7 +11,7 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 
 class MainViewModel : ViewModel() {
-    private val api_key = "OHeogT6EGM6my3ZyT0ATWQAW5BG7aqbnJny3WoYtxLthtOuc8uqK8irZieJUUPxAfLZJugVlo7MN0776O0dZqg=="// BuildConfig.API_KEY
+    private val api_key = BuildConfig.API_KEY
 
     // 대한민국 주요 도시 목록
     val cities = listOf(
@@ -40,6 +38,9 @@ class MainViewModel : ViewModel() {
     private val _dustData = MutableStateFlow<DustItem?>(null)
     val dustData: StateFlow<DustItem?> = _dustData.asStateFlow()
 
+    private val _airQualityClassification = MutableStateFlow("Loading...")
+    val airQualityClassification: StateFlow<String> = _airQualityClassification.asStateFlow()
+
 
     // 도시가 선택 시 도시에 따른 지역 정보 업데이트
     fun setSelectedCity(city: String) {
@@ -59,12 +60,12 @@ class MainViewModel : ViewModel() {
     private fun updateAreasForCity(city: String) {
         when (city) {
             "서울" -> _areas.value = listOf("강남구", "서초구", "강서구", "마포구", "동작구")
-            "부산" -> _areas.value = listOf("광복동", "초량동", "대연동", "장림동", "연산동")
-            "대구" -> _areas.value = listOf("신암동", "내당동", "대명동", "복현동", "범어동")
+            "부산" -> _areas.value = listOf("광복동", "초량동", "청룡동", "좌동", "재송동")
+            "대구" -> _areas.value = listOf("신암동", "수창동", "지산동", "서호동", "이현동")
             "인천" -> _areas.value = listOf("송도동", "구월동", "부평동", "가좌동", "작전동")
             "광주" -> _areas.value = listOf("산수동", "화정동", "주월동", "문흥동", "송정동")
-            "대전" -> _areas.value = listOf("용운동", "은행동", "둔산동", "봉명동", "송촌동")
-            "울산" -> _areas.value = listOf("학성동", "삼산동", "방어동", "명촌동", "언양읍")
+            "대전" -> _areas.value = listOf("문평동", "구성동", "노은동", "관평동", "대성동")
+            "울산" -> _areas.value = listOf("화산리", "상남리", "약사동", "범서읍", "송정동")
             "경기" -> _areas.value = listOf("내동", "보산동", "봉산동", "중앙동", "가평")
             "강원" -> _areas.value = listOf("중앙동", "옥천동", "노학동", "남양동", "홍천읍")
             "충북" -> _areas.value = listOf("흥덕구", "중앙탑면", "중앙동", "보은읍", "옥천읍")
@@ -102,7 +103,17 @@ class MainViewModel : ViewModel() {
                                 val filteredItems = items.filter { it.stationName == area }
                                 Log.i("DustInfo", "Filtered Items for $area, $city: $filteredItems")
                                 if (filteredItems.isNotEmpty()) {
-                                    _dustData.value = filteredItems.first()
+                                    val dustItem = filteredItems.first()
+                                    _dustData.value = dustItem
+
+                                    // 수치 분류 후 로깅
+                                    val classification = classifyAirQuality(
+                                        pm10Value = dustItem.pm10Value.toString(),
+                                        pm25Value = dustItem.pm25Value.toString(),
+                                        o3Value = dustItem.o3Value.toString()
+                                    )
+                                    _airQualityClassification.value = classification
+                                    Log.i("AirQuality", classification)
                                 } else {
                                     Log.e("MainViewModel", "No items found for $area, $city")
                                 }
@@ -136,30 +147,41 @@ class MainViewModel : ViewModel() {
         )
     }
 
-    fun classifyAirQuality(pm10Value: Int?, pm25Value: Int?, o3Value: Double?): String {
+    fun classifyAirQuality(pm10Value: String?, pm25Value: String?, o3Value: String?): String {
+        val pm10Int = pm10Value?.toIntOrNull()
+        val pm25Int = pm25Value?.toIntOrNull()
+        val o3Double = o3Value?.toDoubleOrNull()
+
         val pm10Grade = when {
-            pm10Value == null -> "데이터 없음"
-            pm10Value <= 30 -> "좋음"
-            pm10Value <= 80 -> "보통"
-            pm10Value <= 150 -> "나쁨"
-            else -> "매우 나쁨"
+            pm10Int == null -> 0
+            pm10Int <= 30 -> 1
+            pm10Int <= 80 -> 2
+            pm10Int <= 150 -> 3
+            else -> 4
         }
 
         val pm25Grade = when {
-            pm25Value == null -> "데이터 없음"
-            pm25Value <= 15 -> "좋음"
-            pm25Value <= 35 -> "보통"
-            pm25Value <= 75 -> "나쁨"
-            else -> "매우 나쁨"
+            pm25Int == null -> 0
+            pm25Int <= 15 -> 1
+            pm25Int <= 35 -> 2
+            pm25Int <= 75 -> 3
+            else -> 4
         }
 
         val o3Grade = when {
-            o3Value == null -> "데이터 없음"
-            o3Value <= 0.030 -> "좋음"
-            o3Value <= 0.090 -> "보통"
-            o3Value <= 0.150 -> "나쁨"
+            o3Double == null -> 0
+            o3Double <= 0.030 -> 1
+            o3Double <= 0.090 -> 2
+            o3Double <= 0.150 -> 3
+            else -> 4
+        }
+        val averageGrade = (pm10Grade + pm25Grade + o3Grade) / 3.0
+
+        return when {
+            averageGrade <= 1 -> "좋음"
+            averageGrade <= 2 -> "보통"
+            averageGrade <= 3 -> "나쁨"
             else -> "매우 나쁨"
         }
-        return "PM10: $pm10Grade, PM2.5: $pm25Grade, O3: $o3Grade"
     }
 }
