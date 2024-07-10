@@ -133,20 +133,6 @@ class MainViewModel : ViewModel() {
         }
     }
 
-    // API 호출 파라미터
-    private fun setUpDustParameter(sido: String, stationName: String): HashMap<String, String> {
-        return hashMapOf(
-            "serviceKey" to api_key,
-            "returnType" to "json",
-            "numOfRows" to "100",
-            "pageNo" to "1",
-            "sidoName" to sido,
-            "stationName" to stationName,
-            "dataTerm" to "daily",
-            "ver" to "1.3"
-        )
-    }
-
     fun classifyAirQuality(pm10Value: String?, pm25Value: String?, o3Value: String?): String {
         val pm10Int = pm10Value?.toIntOrNull()
         val pm25Int = pm25Value?.toIntOrNull()
