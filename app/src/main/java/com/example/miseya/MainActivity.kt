@@ -172,6 +172,7 @@ fun Imoge(viewModel: MainViewModel) {
             }
         )
 
+        // 수치 레벨 결과 표시
         Text(
             text = airQualityClassification,
             color = Color.Black,

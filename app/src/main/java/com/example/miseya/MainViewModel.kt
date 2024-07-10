@@ -1,14 +1,17 @@
 package com.example.miseya
 
 import DustItem
+import DustResponse
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.miseya.data.cityAreas
 import com.example.miseya.retrofit.NetWorkClient
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
+import retrofit2.Response
 
 class MainViewModel : ViewModel() {
     private val api_key = BuildConfig.API_KEY
@@ -45,90 +48,69 @@ class MainViewModel : ViewModel() {
     // 도시가 선택 시 도시에 따른 지역 정보 업데이트
     fun setSelectedCity(city: String) {
         _selectedCity.value = city
-//        Log.i("MainViewModel", "Selected City: $city")
         updateAreasForCity(city)
     }
 
     // 지역 선택 처리
     fun setSelectedArea(area: String) {
-        Log.i("MainViewModel", "Selected Area: $area")
         _selectedArea.value = area
         loadDustInfo(area)
     }
 
     // 선택된 도시 따라 지역 정보 업데이트
     private fun updateAreasForCity(city: String) {
-        when (city) {
-            "서울" -> _areas.value = listOf("강남구", "서초구", "강서구", "마포구", "동작구")
-            "부산" -> _areas.value = listOf("광복동", "초량동", "청룡동", "좌동", "재송동")
-            "대구" -> _areas.value = listOf("신암동", "수창동", "지산동", "서호동", "이현동")
-            "인천" -> _areas.value = listOf("송도동", "구월동", "부평동", "가좌동", "작전동")
-            "광주" -> _areas.value = listOf("산수동", "화정동", "주월동", "문흥동", "송정동")
-            "대전" -> _areas.value = listOf("문평동", "구성동", "노은동", "관평동", "대성동")
-            "울산" -> _areas.value = listOf("화산리", "상남리", "약사동", "범서읍", "송정동")
-            "경기" -> _areas.value = listOf("내동", "보산동", "봉산동", "중앙동", "가평")
-            "강원" -> _areas.value = listOf("중앙동", "옥천동", "노학동", "남양동", "홍천읍")
-            "충북" -> _areas.value = listOf("흥덕구", "중앙탑면", "중앙동", "보은읍", "옥천읍")
-            "충남" -> _areas.value = listOf("동남구", "중동", "대천동", "온양동", "동문동")
-            "전북" -> _areas.value = listOf("완산구", "영등동", "금동", "요촌동", "삼례읍")
-            "전남" -> _areas.value = listOf("장흥읍", "진도읍", "신안군", "곡성읍", "목포항")
-            "경북" -> _areas.value = listOf("우현동", "장흥동", "대도동", "오천읍", "연일읍")
-            "경남" -> _areas.value = listOf("경화동", "월영동", "금성면", "동상동", "장유동")
-            "제주" -> _areas.value = listOf("이도동", "연동", "조천읍", "한림읍", "애월읍")
-            "세종" -> _areas.value = listOf("보람동", "한솔동", "전의면")
-            else -> _areas.value = emptyList()
-        }
+        val cityArea = cityAreas.find { it.city == city }
+        _areas.value = cityArea?.areas ?: emptyList()
     }
 
     // 지역의 미세먼지 정보 로드
     fun loadDustInfo(area: String) = viewModelScope.launch {
+        val startTime = System.currentTimeMillis()
         _isLoading.value = true
         selectedCity.value?.let { city ->
             try {
-                val response = NetWorkClient.dustNetWork.getDust(
-                    serviceKey = api_key,
-                    returnType = "json",
-                    numOfRows = "100",
-                    pageNo = "1",
-                    sidoName = city,
-                    stationName = area,
-                    dataTerm = "daily",
-                    ver = "1.3"
-                )
+                val apiCallStartTime = System.currentTimeMillis()
+                val response = fetchDustInfo(api_key, city, area)
+                val apiCallEndTime = System.currentTimeMillis()
+
                 if (response.isSuccessful) {
+                    val responseBodyStartTime = System.currentTimeMillis()
                     response.body()?.let { dustResponse ->
                         dustResponse.response.body.let { body ->
                             val items = body.dustItem
-                            if (items != null) {
-                                val filteredItems = items.filter { it.stationName == area }
-                                Log.i("DustInfo", "Filtered Items for $area, $city: $filteredItems")
-                                if (filteredItems.isNotEmpty()) {
-                                    val dustItem = filteredItems.first()
-                                    _dustData.value = dustItem
+                            val responseBodyEndTime = System.currentTimeMillis()
 
-                                    // 수치 분류 후 로깅
-                                    val classification = classifyAirQuality(
-                                        pm10Value = dustItem.pm10Value.toString(),
-                                        pm25Value = dustItem.pm25Value.toString(),
-                                        o3Value = dustItem.o3Value.toString()
-                                    )
-                                    _airQualityClassification.value = classification
-                                    Log.i("AirQuality", classification)
-                                } else {
-                                    Log.e("MainViewModel", "No items found for $area, $city")
-                                }
+                            if (!items.isNullOrEmpty()) {
+                                val dustItem = items.first()
+                                val dustItemProcessingStartTime = System.currentTimeMillis()
+                                _dustData.value = dustItem
+
+                                // 수치 분류 후 로깅
+                                val classification = classifyAirQuality(
+                                    pm10Value = dustItem.pm10Value.toString(),
+                                    pm25Value = dustItem.pm25Value.toString(),
+                                    o3Value = dustItem.o3Value.toString()
+                                )
+                                _airQualityClassification.value = classification
+                                Log.i("AirQuality", classification)
+                                val dustItemProcessingEndTime = System.currentTimeMillis()
+                                Log.i("Performance", "Dust item processing time: ${dustItemProcessingEndTime - dustItemProcessingStartTime} ms")
                             } else {
                                 Log.e("MainViewModel", "No items found for $area, $city")
                             }
+                            Log.i("Performance", "Response body processing time: ${responseBodyEndTime - responseBodyStartTime} ms")
                         }
                     }
                 } else {
                     Log.e("MainViewModel", "Error: ${response.errorBody()?.string()}")
                 }
+                Log.i("Performance", "API call time: ${apiCallEndTime - apiCallStartTime} ms")
             } catch (e: Exception) {
                 Log.e("MainViewModel", "Error fetching dust info for $area, $city", e)
             } finally {
                 _isLoading.value = false
+                val endTime = System.currentTimeMillis()
+                Log.i("Performance", "Total loadDustInfo execution time: ${endTime - startTime} ms")
             }
         }
     }
@@ -169,5 +151,22 @@ class MainViewModel : ViewModel() {
             averageGrade <= 3 -> "나쁨"
             else -> "매우 나쁨"
         }
+    }
+
+    suspend fun fetchDustInfo(
+        serviceKey: String,
+        city: String,
+        area: String
+    ): Response<DustResponse> {
+        return NetWorkClient.dustNetWork.getDust(
+            serviceKey = serviceKey,
+            returnType = "json",
+            numOfRows = "100",
+            pageNo = "1",
+            sidoName = city,
+            stationName = area,
+            dataTerm = "daily",
+            ver = "1.3"
+        )
     }
 }
