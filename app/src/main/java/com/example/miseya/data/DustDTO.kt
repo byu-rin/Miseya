@@ -32,6 +32,8 @@ data class DustHeader(
 // 대기 오염 항목에 대한 데이터 클래스
 data class DustItem(
     @SerializedName("stationName") val stationName: String,
+    @SerializedName("sidoName") val sidoName: String,
+    @SerializedName("dataTime") val dataTime: String,
     @SerializedName("khaiValue") val khaiValue: String?, // 여기서 Int -> String으로 변경
     @SerializedName("khaiGrade") val khaiGrade: String?,
     @SerializedName("pm10Value") val pm10Value: String?,
@@ -47,5 +49,4 @@ data class DustItem(
     @SerializedName("so2Value") val so2Value: String?,
     @SerializedName("so2Grade") val so2Grade: String?
 )
-// 대기 오염 정보 응답에 대한 데이터 클래스
 

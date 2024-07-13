@@ -136,14 +136,22 @@ fun Spinner(
 @Composable
 fun Imoge(viewModel: MainViewModel) {
     val airQualityClassification by viewModel.airQualityClassification.collectAsState()
+    val dustData by viewModel.dustData.collectAsState()
 
     ConstraintLayout(
         modifier = Modifier.fillMaxSize()
     ) {
         val (location, date, data, level) = createRefs()
 
+        // API 응답에서 받은 정보 표시
+        val locationText = if (dustData != null) {
+            "${dustData?.sidoName} ${dustData?.stationName}"
+        } else {
+            "location"
+        }
+
         Text(
-            text = "location",
+            text = locationText,
             color = Color.Black,
             modifier = Modifier.constrainAs(location) {
                 top.linkTo(parent.top, margin = 80.dp)
