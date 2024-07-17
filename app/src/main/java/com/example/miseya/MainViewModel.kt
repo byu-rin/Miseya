@@ -42,7 +42,7 @@ class MainViewModel : ViewModel() {
     val dustData: StateFlow<DustItem?> = _dustData.asStateFlow()
 
     // 공기 질 분류 결과를 저장하는 MutableStateFlow
-    private val _airQualityClassification = MutableStateFlow("Loading...")
+    private val _airQualityClassification = MutableStateFlow("")
     val airQualityClassification: StateFlow<String> = _airQualityClassification.asStateFlow()
 
 
@@ -65,10 +65,7 @@ class MainViewModel : ViewModel() {
     }
 
 
-    /* TODO: API 응답에서 sidoname, stationName 정보를 받아서 location 에 저장
-    TODO: API 응답에서 data time 정보를 받아서 date 에 저장
-    TODO: pm10Value 값만 data 에 저장
-    TODO: Loading 지우기
+    /*
     TODO: 결과 따라 화면 색 및 이모지 업데이트
     */
 
@@ -92,7 +89,7 @@ class MainViewModel : ViewModel() {
 
                             // 선택된 지역과 일치하는 항목 필터링
                             val matchingItems = items?.filter { it.stationName == area }
-                            Log.i("MainViewModel", "Matching items: $area : $matchingItems")
+//                            Log.i("MainViewModel", "Matching items: $area : $matchingItems")
 
                             // 미세먼지 항목이 비어있지 않은 경우 실행
                             if (!items.isNullOrEmpty()) {

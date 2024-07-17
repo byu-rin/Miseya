@@ -102,4 +102,8 @@ dependencies {
 
     // Okhttp Profiler
     implementation ("com.localebro:okhttpprofiler:1.0.8")
+
+    // coil
+    implementation("io.coil-kt:coil-compose:2.1.0")
+    implementation("io.coil-kt:coil-gif:2.1.0")
 }
