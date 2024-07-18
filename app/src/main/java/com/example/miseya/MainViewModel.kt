@@ -64,11 +64,6 @@ class MainViewModel : ViewModel() {
         _areas.value = cityArea?.areas ?: emptyList()
     }
 
-
-    /*
-    TODO: 결과 따라 화면 색 및 이모지 업데이트
-    */
-
     // 지역의 미세먼지 정보 로드
     fun loadDustInfo(area: String) = viewModelScope.launch {
         // 로딩 상테를 true 로 설정하여 UI 에 로딩 중임을 알림
@@ -89,7 +84,6 @@ class MainViewModel : ViewModel() {
 
                             // 선택된 지역과 일치하는 항목 필터링
                             val matchingItems = items?.filter { it.stationName == area }
-//                            Log.i("MainViewModel", "Matching items: $area : $matchingItems")
 
                             // 미세먼지 항목이 비어있지 않은 경우 실행
                             if (!items.isNullOrEmpty()) {
@@ -100,9 +94,9 @@ class MainViewModel : ViewModel() {
 
                                 // 수치 분류 후 로깅
                                 val classification = classifyAirQuality(
-                                    pm10Value = dustItem?.pm10Value.toString(),
-                                    pm25Value = dustItem?.pm25Value.toString(),
-                                    o3Value = dustItem?.o3Value.toString()
+                                    pm10Value = dustItem?.pm10Value,
+                                    pm25Value = dustItem?.pm25Value,
+                                    o3Value = dustItem?.o3Value
                                 )
                                 // 분류 결과를 StateFlow 에 설정
                                 _airQualityClassification.value = classification
