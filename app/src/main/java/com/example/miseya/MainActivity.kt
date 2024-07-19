@@ -18,14 +18,12 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.DropdownMenu
 import androidx.compose.material.DropdownMenuItem
-import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Surface
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
@@ -212,13 +210,14 @@ fun MainInfo(viewModel: MainViewModel) {
         val (location, date, data, level, image) = createRefs()
 
         // location 업데이트
-        val locationText = dustData?.let { "${it.sidoName} $selectedArea" } ?: "도시와 지역을 선택해주세요."
+        val locationText = dustData?.let { "${it.sidoName} $selectedArea" } ?: "지역을 선택해주세요."
         // dataTime 업데이트
         val dateText = dustData?.dataTime ?: ""
         // khaiValue 업데이트
         val dataText = dustData?.khaiValue ?: "0"
 
         Log.d("MainInfo", "LocationText: $locationText, DateText: $dateText, DataText: $dataText")
+        //TODO: LOG 2중으로 찍힘
 
         Text(
             text = locationText,
@@ -273,7 +272,7 @@ fun MainInfo(viewModel: MainViewModel) {
             fontSize = 28.sp,
             color = Color.Black,
             modifier = Modifier.constrainAs(level) {
-                bottom.linkTo(parent.bottom, margin = 80.dp)
+                top.linkTo(data.bottom, margin = 30.dp)
                 start.linkTo(parent.start)
                 end.linkTo(parent.end)
             }

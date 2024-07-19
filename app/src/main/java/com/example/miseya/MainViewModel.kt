@@ -102,14 +102,11 @@ class MainViewModel : ViewModel() {
                                 _airQualityClassification.value = classification
                                 Log.i("AirQuality", classification)
                             } else {
-                                // 미세먼지 항목 없는 경우
-                                Log.e("MainViewModel", "No items found for $area, $city")
+                                // API 응답 실패
+                                Log.e("MainViewModel", "Error: ${response.errorBody()?.string()}")
                             }
                         }
                     }
-                } else {
-                    // API 응답 실패
-                    Log.e("MainViewModel", "Error: ${response.errorBody()?.string()}")
                 }
             } catch (e: Exception) {
                 Log.e("MainViewModel", "Error fetching dust info for $area, $city", e)
