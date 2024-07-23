@@ -1,49 +1,145 @@
-![Miseya](https://capsule-render.vercel.app/api?type=venom&color=0:134B70,100:508C9B&height=300&section=header&text=미세야.&fontSize=90&fontColor=D8E3E1)
+# MISEYA
 
-
-# Miseya - 미세먼지 알림 서비스
-> 선택 지역의 미세먼지 수치, 등급 알림 서비스<br/>
-> 23.09.15 ~ 23.09.22
-
-<br><br>
-
-<img width="150" alt="미세먼지 좋음" src="https://github.com/user-attachments/assets/e0f4ec7d-2cc7-4786-8241-eff60c80a28b">
-<img width="150" alt="미세먼지 나쁨" src="https://github.com/user-attachments/assets/c979d810-e814-4eff-aa55-ee3f0fefbaf8">
-<img width="150" alt="미세먼지 보통" src="https://github.com/user-attachments/assets/3ef8f6e3-db7b-4248-b9ca-70ac4d1b7bf2">
-<img width="150" alt="미세먼지 매우 나쁨" src="https://github.com/user-attachments/assets/a5a8c863-690a-4c9d-8396-86403b95d4a7">
-<img width="150" alt="지역을 선택해 주세요" src="https://github.com/user-attachments/assets/8b003433-cefd-4cae-bf3e-fbf8ff809d3a">
-
-
-<br><br>
-## 사용된 기술 및 라이브러리
-
-### Retrofit2 & OkHttp3
->미세먼지 정보를 API(공공데이터포털)로부터 가져올 때, Retrofit을 사용해 데이터를 조회, OkHttp3로 네트워크 성능을 관리
+![Miseya](https://capsule-render.vercel.app/api?type=venom&color=0:134B70,100:508C9B&height=300&section=header&text=미세야.&fontSize=80&fontColor=D8E3E1&animation=fadeIn)
 
 <br>
 
-### Gson
->서버에서 받은 JSON 형식의 미세먼지 데이터를 안드로이드 앱 내에서 사용하기 위한 객체로 변환할 때 사용
+# Overview
+**23.09.15 ~ 23.09.22** <br><br>
+Miseya is an Android application designed to display air quality levels using real-time data from an API.<br>This project utilizes various technologies and libraries, including Jetpack Compose, Retrofit, OkHttp, and more.<br>
 
 <br>
 
-### Coroutines
->Miseya 는 미세먼지 데이터를 외부 API로부터 비동기적으로 불러온다.<br>
->이 때, Retrofit과 코루틴을 결합하여 사용하면, 네트워크 요청을 간결하게 작성할 수 있다. <br>
->비동기 코드를 동기 코드처럼 읽고 쓸 수 있게 해주므로, 콜백 방식에서 발생하는 복잡성과 중첩 문제를 피할 수 있다.
+![미세먼지 디자인 예시](https://github.com/user-attachments/assets/c53c2d8a-814f-44f4-81e7-7c4021e1fca2)
 
 <br>
 
-### DataBinding & ViewBinding
->UI 컴포넌트와 데이터 소스를 바인딩하여 안전하게 데이터를 처리한다.<br>
+# Prerequisites
+- Android Studio 4.1 or later
+- Java 1.8 or later
+- Kotlin 1.5.0 or later
 
 <br>
 
-### Hilt
->필요한 종속성을 자동 주입, 각 구성 요소의 초기화와 테스트 용이
+# Getting Started
 
-<br><br>
+## Clone the Repository
+```sh
+git clone https://github.com/byu-rin/miseya.git
+cd miseya
+```
+### 1. Set Up API Key
 
-## 개선 및 대안
->GSON 대신 serialization을 고려할 수 있다. 코틀린의 idiomatic 특성을 활용하여 성능최적화, 간결한 코드에 도움을 준다.<br/>
->민감한 데이터를 다루는 경우, HTTPS를 사용하여 네트워크 통신의 보안을 강화할 수 있다.
+> [!TIP]
+> 1. Create a 'local.properties' file in the root directory of the project.
+> 2. You will receive a key on the [공공데이터포털](https://www.data.go.kr/data/15073861/openapi.do) website after applying for API utilization.
+> 3. Add your API key to the 'local.properties' file.
+> <br> 🚀 If it's annoying, use this API key.
+
+```
+api_key = OHeogT6EGM6my3ZyT0ATWQAW5BG7aqbnJny3WoYtxLthtOuc8uqK8irZieJUUPxAfLZJugVlo7MN0776O0dZqg==
+```
+
+<br>
+
+### 2. Build the Project
+1. Open the project in Android Studio.
+2. Sync the project with Gradle files.
+3. Run the project on an emulator or a physical device.
+
+<br>
+
+# Dependencies
+This project depends on:
+- [Jetpack Compose](https://github.com/android/compose-samples)
+- [OkHttp3](https://github.com/square/okhttp)
+- [Retrofit2](https://github.com/square/retrofit)
+- [PowerSpinner](https://github.com/skydoves/PowerSpinner)
+
+<br>
+
+# Usage
+This Project requires support for Android Jetpack Compose.
+<br>
+## Main Features
+- Real-time Air Quality Display: Fetches and displays air quality levels using a slider that updates in real-time.
+- Modern UI: Built with Jetpack Compose for a sleek and responsive user interface.
+- API Integration: Uses Retrofit and OkHttp to fetch data from an external API.
+<br>
+
+# Example Code
+Here's an example of how to fetch air quality data using Retrofit:
+
+```kotlin
+interface NetWorkInterface {
+    @GET("getCtprvnRltmMesureDnsty")
+    suspend fun getDust(
+        @Query("serviceKey") serviceKey: String,
+        @Query("returnType") returnType: String
+    ): Response<DustResponse>
+}
+
+val retrofit = Retrofit.Builder()
+    .baseUrl("https://apis.data.go.kr/B552584/ArpltnInforInqireSvc/")
+    .addConverterFactory(GsonConverterFactory.create())
+    .build()
+
+val dustNetWork: NetWorkInterface = retrofit.create(NetWorkInterface::class.java)
+```
+
+<br>
+
+# Customizing the Spinner
+Spinner can be customized by modifying local and urban selection features:
+
+```kotlin
+@Composable
+fun Spinner(
+    items: List<String>,
+    label: String,
+    onItemSelected: (String) -> Unit,
+    modifier: Modifier = Modifier
+) {
+    var expanded by remember { mutableStateOf(false) } // 드롭다운 메뉴 확장?
+    var selectedOptionText by remember { mutableStateOf(label) } // 선택 항목 저장
+
+    BoxWithConstraints( // 드롭다운 메뉴의 컨테이너
+        modifier = modifier
+            .fillMaxWidth()  // 필수: weight가 올바르게 동작하려면 필요
+            .padding(10.dp)
+            .clickable(onClick = { expanded = true })
+            .background(Color.Transparent)
+            .border(1.dp, Color.White, RoundedCornerShape(8.dp)),
+        contentAlignment = Alignment.Center
+    )
+}
+```
+<br>
+
+# Customizing the DropdownMenu
+```kotlin
+@Composable
+DropdownMenu(
+            expanded = expanded,
+            onDismissRequest = { expanded = false },
+            modifier = Modifier.width(with(LocalDensity.current) { boxWidth.toDp() })
+        ) {
+            items.forEach { item ->
+                DropdownMenuItem(onClick = {
+                    selectedOptionText = item
+                    expanded = false
+                    onItemSelected(item)
+                }) 
+            }
+        }
+```
+<br>
+
+# Contributing
+🥰 If you'd like to contribute to this project, please fork the repository and use a feature branch. <br>Pull requests are warmly welcome.
+
+<br>
+
+# License
+This project is licensed under the MIT License. See the LICENSE file for details.
+
