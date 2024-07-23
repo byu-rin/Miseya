@@ -9,9 +9,6 @@
 <img width="215" alt="Screenshot 2024-05-05 at 9 34 08 PM" src="https://github.com/byu-rin/Miseya/assets/130144220/bf1f20b3-0231-465a-b448-0eaf189ec65c">
 <img width="215" alt="Screenshot 2024-05-05 at 9 33 57 PM" src="https://github.com/byu-rin/Miseya/assets/130144220/f7ffe785-8d4f-4bbf-88a8-d486e4478d1f">
 
-
-
-
 ## 시연 영상
 https://youtube.com/shorts/FuMMjT93uQs?feature=share
 

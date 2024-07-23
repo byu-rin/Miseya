@@ -11,25 +11,25 @@ data class ApiResponse(
     val header: DustHeader
 )
 
-// 대기 오염 정보 응답에서 Body에 대한 데이터 클래스
+// Data class of Body in response
 data class DustBody(
     @SerializedName("totalCount")
     val totalCount: Int,
     @SerializedName("items")
-    val dustItem: List<DustItem>?, // 대기 오염 항목들을 저장하는 리스트
+    val dustItem: List<DustItem>?, // Save the list of Air pollution information
     @SerializedName("pageNo")
     val pageNo: Int,
     @SerializedName("numOfRows")
     val numOfRows: Int
 )
 
-// 대기 오염 정보 응답에서 Header에 대한 데이터 클래스
+// Data class of Header in response
 data class DustHeader(
     val resultCode: String,
     val resultMsg: String
 )
 
-// 대기 오염 항목에 대한 데이터 클래스
+// Data class for air pollution items
 data class DustItem(
     @SerializedName("stationName") val stationName: String,
     @SerializedName("sidoName") val sidoName: String,

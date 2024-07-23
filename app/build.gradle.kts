@@ -1,4 +1,3 @@
-import com.google.api.AnnotationsProto.http
 import java.io.FileInputStream
 import java.util.Properties
 
@@ -99,9 +98,6 @@ dependencies {
     // UI Tests
     androidTestImplementation("androidx.compose.ui:ui-test-junit4:$composeVersion")
     debugImplementation("androidx.compose.ui:ui-test-manifest")
-
-    // Okhttp Profiler
-    implementation ("com.localebro:okhttpprofiler:1.0.8")
 
     // coil
     implementation("io.coil-kt:coil-compose:2.1.0")

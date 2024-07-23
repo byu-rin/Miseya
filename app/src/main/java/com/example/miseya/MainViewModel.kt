@@ -16,92 +16,91 @@ import retrofit2.Response
 class MainViewModel : ViewModel() {
     private val api_key = BuildConfig.API_KEY
 
-    // 대한민국 주요 도시 목록
+    // South Korea cities list
     val cities = listOf(
         "서울", "부산", "대구", "인천", "광주", "대전", "울산",
         "경기", "강원", "충북", "충남", "전북", "전남", "경북", "경남", "제주", "세종"
     )
 
-    // 각 도시의 구역 정보를 관리하는 MutableStateFlow
+    // Manage the list of areas for the selected city
     private val _areas = MutableStateFlow<List<String>>(emptyList())
     val areas: StateFlow<List<String>> = _areas.asStateFlow()
 
-    // 현재 선택된 도시를 저장하는 MutableStateFlow
+    // Save the currently selected city
     private val _selectedCity = MutableStateFlow<String?>(null)
     val selectedCity: StateFlow<String?> = _selectedCity.asStateFlow()
 
-    // 현재 선택된 지역을 저장하는 MutableStateFlow
+    // Save the currently selected area
     private val _selectedArea = MutableStateFlow<String?>(null)
     val selectedArea: StateFlow<String?> = _selectedArea.asStateFlow()
 
     private val _isLoading = MutableStateFlow(false)
 
-    // API로부터 받은 데이터를 저장하는 MutableStateFlow
+    // Save the data received from the API
     private val _dustData = MutableStateFlow<DustItem?>(null)
     val dustData: StateFlow<DustItem?> = _dustData.asStateFlow()
 
-    // 공기 질 분류 결과를 저장하는 MutableStateFlow
+    // Save the classification result of air quality
     private val _airQualityClassification = MutableStateFlow("")
     val airQualityClassification: StateFlow<String> = _airQualityClassification.asStateFlow()
 
-
-    // 도시가 선택 시, 선택 도시 업데이트 후 구역 정보 업데이트
+    // Update the selected city when a city is selected
     fun setSelectedCity(city: String) {
         _selectedCity.value = city
         updateAreasForCity(city)
     }
 
-    // 지역 선택 처리, 업데이트 후 미세먼지 정보 로드
+    // Process area selection, update, and load dust information
     fun setSelectedArea(area: String) {
         _selectedArea.value = area
         loadDustInfo(area)
     }
 
-    // 선택된 도시 따라 지역 정보 업데이트
+    // Update area information according to the selected city
     private fun updateAreasForCity(city: String) {
         val cityArea = cityAreas.find { it.city == city }
         _areas.value = cityArea?.areas ?: emptyList()
     }
 
-    // 지역의 미세먼지 정보 로드
+    // Load dust information for the area
     fun loadDustInfo(area: String) = viewModelScope.launch {
-        // 로딩 상테를 true 로 설정하여 UI 에 로딩 중임을 알림
+        // Set the loading state to true to notify the UI that it is loading
         _isLoading.value = true
-        // 현재 선택된 도시가 null 이 아닌 경우 실행
+        // execute if the currently selected city is not null
         selectedCity.value?.let { city ->
             try {
-                // API 호출
+                // call the API
                 val response = fetchDustInfo(api_key, city, area)
 
-                // API 응답 성공 시
+                // Successful API response
                 if (response.isSuccessful) {
-                    // 응답 본문
+                    // Response body
                     response.body()?.let { dustResponse ->
                         dustResponse.response.body.let { body ->
-                            // 응답에서 미세먼지 항목들을 가져옴
+                            // Load the dust items from the response
                             val items = body.dustItem
 
-                            // 선택된 지역과 일치하는 항목 필터링
+                            // Filter items that match the selected area
                             val matchingItems = items?.filter { it.stationName == area }
 
-                            // 미세먼지 항목이 비어있지 않은 경우 실행
+                            // execute if the dust item is not empty
                             if (!items.isNullOrEmpty()) {
-                                // 첫 번째 일치하는 미세먼지 항목을 가져옴
+                                // Get the first matching dust item
                                 val dustItem = matchingItems?.first()
-                                // 가져온 미세먼지 항목을 StateFlow 에 설정
+                                // Set the acquired dust item to StateFlow
                                 _dustData.value = dustItem
 
-                                // 수치 분류 후 로깅
+                                // Logging after classifying the value
                                 val classification = classifyAirQuality(
                                     pm10Value = dustItem?.pm10Value,
                                     pm25Value = dustItem?.pm25Value,
                                     o3Value = dustItem?.o3Value
                                 )
-                                // 분류 결과를 StateFlow 에 설정
+                                // Set the classification result to StateFlow
                                 _airQualityClassification.value = classification
                                 Log.i("AirQuality", classification)
                             } else {
-                                // API 응답 실패
+                                // Failed to get dust information
                                 Log.e("MainViewModel", "Error: ${response.errorBody()?.string()}")
                             }
                         }
@@ -110,13 +109,13 @@ class MainViewModel : ViewModel() {
             } catch (e: Exception) {
                 Log.e("MainViewModel", "Error fetching dust info for $area, $city", e)
             } finally {
-                // 로딩 상태를 false 로 설정하여 UI 에 로딩 완료 알림
+                // Set the loading state to false to notify the UI that loading is complete
                 _isLoading.value = false
             }
         }
     }
 
-    // 미세먼지 수치 분류 후 레벨 반환
+    // Return the level after classifying the fine dust value
     fun classifyAirQuality(pm10Value: String?, pm25Value: String?, o3Value: String?): String {
         val pm10Int = pm10Value?.toIntOrNull()
         val pm25Int = pm25Value?.toIntOrNull()
@@ -155,7 +154,7 @@ class MainViewModel : ViewModel() {
         }
     }
 
-    // 수치를 API 에서 가져오는 함수
+    // Fetch the value from the API
     suspend fun fetchDustInfo(
         serviceKey: String,
         city: String,

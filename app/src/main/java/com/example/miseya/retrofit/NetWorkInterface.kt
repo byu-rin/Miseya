@@ -5,11 +5,10 @@ import retrofit2.Response
 import retrofit2.http.GET
 import retrofit2.http.Query
 
-// 네트워크 요청을 정의하는 Retrofit 인터페이스
+// Justice Network request defined Retrofit interface
 interface NetWorkInterface {
 
-    // 시도별 실시간 측정정보 조회를 위한 GET 요청
-    @GET("getCtprvnRltmMesureDnsty") //시도별 실시간 측정정보 조회 주소
+    @GET("getCtprvnRltmMesureDnsty")
     suspend fun getDust(
         @Query("serviceKey") serviceKey: String,
         @Query("returnType") returnType: String,
