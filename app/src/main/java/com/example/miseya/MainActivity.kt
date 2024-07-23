@@ -103,7 +103,7 @@ class MainActivity : AppCompatActivity() {
     // 미세먼지 데이터를 가져오기 위한 파라미터를 설정하는 함수
     private fun setUpDustParameter(sido: String): HashMap<String, String> {
         // 서비스에 사용될 키 값
-        val authKey ="OHeogT6EGM6my3ZyT0ATWQAW5BG7aqbnJny3WoYtxLthtOuc8uqK8irZieJUUPxAfLZJugVlo7MN0776O0dZqg=="
+        val authKey ="secret-api-key"
 
         // HashMap 사용하여 파라미터를 설정, 반환
         return hashMapOf(
