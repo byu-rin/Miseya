@@ -14,7 +14,7 @@ import kotlinx.coroutines.launch
 import retrofit2.Response
 
 class MainViewModel : ViewModel() {
-    private val api_key = "OHeogT6EGM6my3ZyT0ATWQAW5BG7aqbnJny3WoYtxLthtOuc8uqK8irZieJUUPxAfLZJugVlo7MN0776O0dZqg==" // BuildConfig.API_KEY
+    private val api_key = BuildConfig.API_KEY
 
     // 대한민국 주요 도시 목록
     val cities = listOf(
@@ -35,7 +35,6 @@ class MainViewModel : ViewModel() {
     val selectedArea: StateFlow<String?> = _selectedArea.asStateFlow()
 
     private val _isLoading = MutableStateFlow(false)
-    val isLoading: StateFlow<Boolean> = _isLoading.asStateFlow()
 
     // API로부터 받은 데이터를 저장하는 MutableStateFlow
     private val _dustData = MutableStateFlow<DustItem?>(null)
