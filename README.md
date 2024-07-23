@@ -1,19 +1,18 @@
+![Miseya](https://capsule-render.vercel.app/api?type=venom&color=0:134B70,100:508C9B&height=300&section=header&text=미세야.&fontSize=90&fontColor=D8E3E1)
+
+
 # Miseya - 미세먼지 알림 서비스
 > 선택 지역의 미세먼지 수치, 등급 알림 서비스<br/>
 > 23.09.15 ~ 23.09.22
 
 <br><br>
 
-<img width="215" alt="Screenshot 2024-05-05 at 9 33 00 PM" src="https://github.com/byu-rin/Miseya/assets/130144220/ebfb23e9-f72e-42e7-ab14-ad7d11f441bf">
-<img width="215" alt="Screenshot 2024-05-05 at 9 33 27 PM" src="https://github.com/byu-rin/Miseya/assets/130144220/894c8f09-2940-4ef6-9a07-99dc09c63d4a">
-<img width="215" alt="Screenshot 2024-05-05 at 9 34 08 PM" src="https://github.com/byu-rin/Miseya/assets/130144220/bf1f20b3-0231-465a-b448-0eaf189ec65c">
-<img width="215" alt="Screenshot 2024-05-05 at 9 33 57 PM" src="https://github.com/byu-rin/Miseya/assets/130144220/f7ffe785-8d4f-4bbf-88a8-d486e4478d1f">
+<img width="150" alt="미세먼지 좋음" src="https://github.com/user-attachments/assets/e0f4ec7d-2cc7-4786-8241-eff60c80a28b">
+<img width="150" alt="미세먼지 나쁨" src="https://github.com/user-attachments/assets/c979d810-e814-4eff-aa55-ee3f0fefbaf8">
+<img width="150" alt="미세먼지 보통" src="https://github.com/user-attachments/assets/3ef8f6e3-db7b-4248-b9ca-70ac4d1b7bf2">
+<img width="150" alt="미세먼지 매우 나쁨" src="https://github.com/user-attachments/assets/a5a8c863-690a-4c9d-8396-86403b95d4a7">
+<img width="150" alt="지역을 선택해 주세요" src="https://github.com/user-attachments/assets/8b003433-cefd-4cae-bf3e-fbf8ff809d3a">
 
-
-
-
-## 시연 영상
-https://youtube.com/shorts/FuMMjT93uQs?feature=share
 
 <br><br>
 ## 사용된 기술 및 라이브러리
