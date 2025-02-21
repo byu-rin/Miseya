@@ -21,14 +21,13 @@ class MainViewModel : ViewModel() {
         "서울", "부산", "대구", "인천", "광주", "대전", "울산",
         "경기", "강원", "충북", "충남", "전북", "전남", "경북", "경남", "제주", "세종"
     )
-
     // Manage the list of areas for the selected city
     private val _areas = MutableStateFlow<List<String>>(emptyList())
     val areas: StateFlow<List<String>> = _areas.asStateFlow()
 
     // Save the currently selected city
     private val _selectedCity = MutableStateFlow<String?>(null)
-    val selectedCity: StateFlow<String?> = _selectedCity.asStateFlow()
+    private val selectedCity: StateFlow<String?> = _selectedCity.asStateFlow()
 
     // Save the currently selected area
     private val _selectedArea = MutableStateFlow<String?>(null)
@@ -63,60 +62,62 @@ class MainViewModel : ViewModel() {
     }
 
     // Load dust information for the area
-    fun loadDustInfo(area: String) = viewModelScope.launch {
-        // Set the loading state to true to notify the UI that it is loading
+    private fun loadDustInfo(area: String) = viewModelScope.launch {
+        // 1. UI 에게 로딩 상태 알림 (스피너)
         _isLoading.value = true
-        // execute if the currently selected city is not null
+        // 2. selectedCity 가 null 이 아니라면 api 호출 진행
         selectedCity.value?.let { city ->
             try {
-                // call the API
-                val response = fetchDustInfo(api_key, city, area)
-
-                // Successful API response
+                // 3. 호출 시작 전 로그 출력
+                Log.d("MainViewModel", "Api 요청 시작 : city=$city, area=$area")
+                val response = fetchDustInfo(api_key, city, area) // 4. api 호출
+                // 5. api 호출 성공했는지 확인 (HTTP 상태 코드)
                 if (response.isSuccessful) {
-                    // Response body
+                    // 6. 응답 본문이 null 이 아닌 경우 처리
                     response.body()?.let { dustResponse ->
+                        // 7. 응답 body 부분에서 dust 항목 가져옴.
                         dustResponse.response.body.let { body ->
-                            // Load the dust items from the response
+                            // 8. body 의 dustItem 리스트에서 선택한 area 와 매칭되는 항목 필터링
                             val items = body.dustItem
-
-                            // Filter items that match the selected area
                             val matchingItems = items?.filter { it.stationName == area }
 
-                            // execute if the dust item is not empty
+                            // 9. dustItem 리스트가 비어있지 않다면
                             if (!items.isNullOrEmpty()) {
-                                // Get the first matching dust item
+                                // 10. 첫 번째 일치 항목 선택
                                 val dustItem = matchingItems?.first()
-                                // Set the acquired dust item to StateFlow
+                                // 11. UI 에 보여줄 데이터로 stateFlow(_dustData) 에 할당
                                 _dustData.value = dustItem
 
-                                // Logging after classifying the value
+                                // 12. 대기질 분류를 위한 로직 호출
                                 val classification = classifyAirQuality(
                                     pm10Value = dustItem?.pm10Value,
                                     pm25Value = dustItem?.pm25Value,
                                     o3Value = dustItem?.o3Value
                                 )
-                                // Set the classification result to StateFlow
+                                // 13. 대기질 분류 결과를 StateFlow(_airQualityClassification) 에 할당
                                 _airQualityClassification.value = classification
+                                // 14. 대기질 분류 결과 로그 출력
                                 Log.i("AirQuality", classification)
                             } else {
-                                // Failed to get dust information
+                                // dustItem 리스트가 비어있을 경우, 로그
                                 Log.e("MainViewModel", "Error: ${response.errorBody()?.string()}")
                             }
                         }
                     }
                 }
             } catch (e: Exception) {
+                // 15. API 호출 도중 예외 발생 시 catch 블록에서 로그
                 Log.e("MainViewModel", "Error fetching dust info for $area, $city", e)
             } finally {
-                // Set the loading state to false to notify the UI that loading is complete
+                // 16. try-catch 블록 끝나면 항상 실행 : 로딩 상태 종료 알림
                 _isLoading.value = false
             }
         }
     }
 
     // Return the level after classifying the fine dust value
-    fun classifyAirQuality(pm10Value: String?, pm25Value: String?, o3Value: String?): String {
+    private fun classifyAirQuality(pm10Value: String?, pm25Value: String?, o3Value: String?): String
+    {
         val pm10Int = pm10Value?.toIntOrNull()
         val pm25Int = pm25Value?.toIntOrNull()
         val o3Double = o3Value?.toDoubleOrNull()
@@ -163,12 +164,12 @@ class MainViewModel : ViewModel() {
         return NetWorkClient.dustNetWork.getDust(
             serviceKey = serviceKey,
             returnType = "json",
-            numOfRows = "100",
-            pageNo = "1",
+            numOfRows = 100,
+            pageNo = 1,
             sidoName = city,
             stationName = area,
             dataTerm = "daily",
-            ver = "1.3"
+            ver = "1.0"
         )
     }
 }

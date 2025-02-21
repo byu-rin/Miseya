@@ -1,4 +1,7 @@
 import com.google.gson.annotations.SerializedName
+/*
+API에서 받아오는 JSON 응답을 Kotlin 객체로 변환
+ */
 data class DustResponse(
     @SerializedName("response")
     val response: ApiResponse
@@ -29,24 +32,19 @@ data class DustHeader(
     val resultMsg: String
 )
 
-// Data class for air pollution items
+ // Data class for air pollution items
 data class DustItem(
-    @SerializedName("stationName") val stationName: String,
-    @SerializedName("sidoName") val sidoName: String,
-    @SerializedName("dataTime") val dataTime: String,
+    @SerializedName("stationName") val stationName: String, // 측정소명
+    @SerializedName("sidoName") val sidoName: String, // 시도명
+    @SerializedName("dataTime") val dataTime: String, //
     @SerializedName("khaiValue") val khaiValue: String?, // 여기서 Int -> String으로 변경
-    @SerializedName("khaiGrade") val khaiGrade: String?,
     @SerializedName("pm10Value") val pm10Value: String?,
-    @SerializedName("pm10Grade") val pm10Grade: String?,
     @SerializedName("pm25Value") val pm25Value: String?,
-    @SerializedName("pm25Grade") val pm25Grade: String?,
-    @SerializedName("o3Value") val o3Value: String?,
-    @SerializedName("o3Grade") val o3Grade: String?,
-    @SerializedName("no2Value") val no2Value: String?,
-    @SerializedName("no2Grade") val no2Grade: String?,
-    @SerializedName("coValue") val coValue: String?,
-    @SerializedName("coGrade") val coGrade: String?,
-    @SerializedName("so2Value") val so2Value: String?,
-    @SerializedName("so2Grade") val so2Grade: String?
-)
+    @SerializedName("o3Value") val o3Value: String?
+ )
 
+/* 출력 결과
+결과코드 resultCode : 결과코드
+결과메시지 resultMsg : 결과메시지
+...https://www.data.go.kr/tcs/dss/selectApiDataDetailView.do?publicDataPk=15073861
+* */
