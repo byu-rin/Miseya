@@ -4,12 +4,12 @@ import androidx.annotation.DrawableRes
 import androidx.compose.foundation.Image
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import coil.compose.rememberImagePainter
+import coil.compose.rememberAsyncImagePainter
 
 @Composable
 fun Imoji(@DrawableRes drawableResId: Int, modifier: Modifier = Modifier) {
     Image(
-        painter = rememberImagePainter(data = drawableResId),
+        painter = rememberAsyncImagePainter(model = drawableResId),
         contentDescription = null,
         modifier = modifier
     )
