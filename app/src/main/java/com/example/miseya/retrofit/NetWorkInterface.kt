@@ -2,7 +2,10 @@ package com.example.miseya.retrofit
 
 import DustResponse
 import retrofit2.Response
+import retrofit2.Retrofit
+import retrofit2.converter.gson.GsonConverterFactory
 import retrofit2.http.GET
+import retrofit2.http.Path
 import retrofit2.http.Query
 
 /*Retrofit 에서 사용할 API 호출 메서드 정의

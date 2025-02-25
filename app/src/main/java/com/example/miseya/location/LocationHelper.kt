@@ -4,6 +4,7 @@ import android.annotation.SuppressLint
 import android.content.Context
 import android.content.pm.PackageManager
 import android.location.Location
+import android.util.Log
 import androidx.core.app.ActivityCompat
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
@@ -21,6 +22,7 @@ class LocationHelper(private val context: Context) {
         fusedLocationClient.lastLocation.addOnSuccessListener { location: Location? ->
             if (location != null) {
                 onLocationReceived(location.latitude, location.longitude)
+                Log.d("LocationHelper", "위치 정보: 위도 ${location.latitude}, 경도 ${location.longitude}")
             } else {
                 onFailure("위치를 가져올 수 없습니다.")
             }

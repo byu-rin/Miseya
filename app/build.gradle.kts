@@ -20,6 +20,7 @@ android {
         versionCode = 1
         versionName = "1.0"
         buildConfigField("String", "API_KEY", properties.getProperty("api_key"))
+        buildConfigField("String", "KAKAO_API_KEY", properties.getProperty("kakao_api_key"))
         vectorDrawables.useSupportLibrary = true
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
@@ -31,6 +32,7 @@ android {
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro")
             buildConfigField("String", "API_KEY", "api_key")
+            buildConfigField("String", "KAKAO_API_KEY", "kakao_api_key")
         }
     }
     compileOptions {

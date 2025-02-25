@@ -2,10 +2,12 @@ package com.android.miseya
 
 import android.content.pm.PackageManager
 import android.os.Bundle
+import android.util.Log
 import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.activity.viewModels
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material.Surface
 import androidx.compose.runtime.Composable
@@ -13,37 +15,17 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.core.content.ContextCompat
+import androidx.lifecycle.lifecycleScope
+import com.example.miseya.MainViewModel
 import com.example.miseya.MiseyaTheme
 import com.example.miseya.location.LocationHelper
 import com.example.miseya.ui.MainContent
-import okhttp3.Request
-
-/**
- * registerForActivityResult 등록
- *
- * requestPermissionLauncher는 ActivityResultContracts.RequestPermission()을 사용하여 권한 요청의 결과를 비동기로 받아옵니다.
- * 권한이 허용되면 getUserLocation()이 호출되어 위치 정보를 요청합니다.
- * onCreate에서의 초기화 및 권한 요청
- *
- * setContent { ... }를 통해 Compose UI를 설정한 후,
- * LocationHelper를 초기화하고,
- * requestLocationPermission()을 호출하여 위치 권한 상태를 확인하고, 없으면 요청합니다.
- * requestLocationPermission() 함수
- *
- * ContextCompat.checkSelfPermission()으로 현재 권한 상태를 확인합니다.
- * 권한이 허용되어 있다면 바로 getUserLocation()을 호출합니다.
- * 그렇지 않으면 requestPermissionLauncher.launch()를 호출하여 사용자에게 권한 요청 다이얼로그를 띄웁니다.
- * getUserLocation() 함수
- *
- * locationHelper.getLastKnownLocation()을 호출하여 마지막으로 저장된 위치 정보를 받아옵니다.
- * 성공하면 onLocationReceived 콜백이 호출되고, 실패 시 onFailure 콜백에서 에러 메시지를 처리합니다.
- * 만약 lastLocation으로 null이 반환된다면, 필요에 따라 getCurrentLocation()이나 requestLocationUpdates()와 같이 현재 위치를 새로 요청하는 방식으로 보완하는 것을 고려할 수 있습니다.
- */
-
+import kotlinx.coroutines.launch
+import kotlin.text.Typography.tm
 
 class MainActivity : ComponentActivity() {
-
     private lateinit var locationHelper: LocationHelper
+    private val viewModel: MainViewModel by viewModels()
 
     // 런타임 권한 요청 결과를 처리
     private val requestPermissionLauncher = registerForActivityResult(ActivityResultContracts.RequestPermission()) { isGranted: Boolean ->
@@ -92,7 +74,37 @@ class MainActivity : ComponentActivity() {
         locationHelper.getLastKnownLocation(
             // 성공 시
             onLocationReceived = { lat, lng ->
-                Toast.makeText(this, "위치: $lat, $lng", Toast.LENGTH_LONG).show()
+                Log.d("원 좌표 위치", "위치: $lat, $lng")
+                lifecycleScope.launch {
+                    val response = viewModel.fetchTMCoordinate(lat, lng)
+                    if (response.isSuccessful) {
+                        val tmResponse = response.body()
+                        val tmDoc = tmResponse?.documents?.firstOrNull()
+                        if (tmDoc != null) {
+                            Toast.makeText(
+                                this@MainActivity,
+                                "TM 좌표 : ${tmDoc.x}, ${tmDoc.y}",
+                                Toast.LENGTH_SHORT
+                            ).show()
+                            viewModel.setSelectedArea(
+                                "${tmDoc.x}, ${tmDoc.y}"
+                            )
+                        } else {
+                            Toast.makeText(
+                                this@MainActivity,
+                                "TM 좌표 변환 결과 없음",
+                                Toast.LENGTH_LONG
+                            ).show()
+                        }
+                    } else {
+                        Toast.makeText(
+                            this@MainActivity,
+                            "TM 좌표 변환 실패: ${response.code()}",
+                            Toast.LENGTH_LONG
+                        ).show()
+                        Log.e("MainActivity", "TM 좌표 변환 실패: ${response.code()}")
+                    }
+                }
             },
             // 실패 시
             onFailure = { error ->

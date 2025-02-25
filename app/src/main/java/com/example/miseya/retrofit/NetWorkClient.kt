@@ -7,7 +7,6 @@ import retrofit2.converter.gson.GsonConverterFactory
 NetworkInterface를 구현한 객체(dustNetWork)를 제공하여 API 호출
 */
 
-
 object NetWorkClient {
     private val retrofit = Retrofit.Builder()
         .baseUrl("https://apis.data.go.kr/B552584/ArpltnInforInqireSvc/")
@@ -15,4 +14,13 @@ object NetWorkClient {
         .build()
 
     val dustNetWork: NetWorkInterface = retrofit.create(NetWorkInterface::class.java)
+}
+
+object KakaoNetworkClient {
+    private val retrofit = Retrofit.Builder()
+        .baseUrl("https://dapi.kakao.com/v2/") // base URL 설정
+        .addConverterFactory(GsonConverterFactory.create())
+        .build()
+
+    val kakaoNetwork: KakaoLocalApiService = retrofit.create(KakaoLocalApiService::class.java)
 }

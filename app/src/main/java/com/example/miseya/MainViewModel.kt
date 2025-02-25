@@ -5,7 +5,9 @@ import DustResponse
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.miseya.data.TmCoordinatesResponse
 import com.example.miseya.data.cityAreas
+import com.example.miseya.retrofit.KakaoNetworkClient
 import com.example.miseya.retrofit.NetWorkClient
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -170,6 +172,16 @@ class MainViewModel : ViewModel() {
             stationName = area,
             dataTerm = "daily",
             ver = "1.0"
+        )
+    }
+
+    suspend fun fetchTMCoordinate(
+        lat_x: Double,
+        lng_y: Double
+    ): Response<TmCoordinatesResponse> {
+        return KakaoNetworkClient.kakaoNetwork.getTranscoord(
+            lat_x = lat_x,
+            lng_y = lng_y
         )
     }
 }
