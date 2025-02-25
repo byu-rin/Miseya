@@ -5,6 +5,9 @@ import DustResponse
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.miseya.Api.DustRepository
+import com.example.miseya.Api.KakaoRepository
+import com.example.miseya.data.AirQualityClassifier.classifyAirQuality
 import com.example.miseya.data.TmCoordinatesResponse
 import com.example.miseya.data.cityAreas
 import com.example.miseya.retrofit.KakaoNetworkClient
@@ -15,7 +18,10 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import retrofit2.Response
 
-class MainViewModel : ViewModel() {
+class MainViewModel(
+    private val dustRepository: DustRepository = DustRepository(),
+    private val kakaoRepository: KakaoRepository = KakaoRepository()
+) : ViewModel() {
     private val api_key = BuildConfig.API_KEY
 
     // South Korea cities list
@@ -72,7 +78,7 @@ class MainViewModel : ViewModel() {
             try {
                 // 3. 호출 시작 전 로그 출력
                 Log.d("MainViewModel", "Api 요청 시작 : city=$city, area=$area")
-                val response = fetchDustInfo(api_key, city, area) // 4. api 호출
+                val response = dustRepository.fetchDustInfo(api_key, city, area) // 4. api 호출
                 // 5. api 호출 성공했는지 확인 (HTTP 상태 코드)
                 if (response.isSuccessful) {
                     // 6. 응답 본문이 null 이 아닌 경우 처리
@@ -117,71 +123,10 @@ class MainViewModel : ViewModel() {
         }
     }
 
-    // Return the level after classifying the fine dust value
-    private fun classifyAirQuality(pm10Value: String?, pm25Value: String?, o3Value: String?): String
-    {
-        val pm10Int = pm10Value?.toIntOrNull()
-        val pm25Int = pm25Value?.toIntOrNull()
-        val o3Double = o3Value?.toDoubleOrNull()
-
-        val pm10Grade = when {
-            pm10Int == null -> 0
-            pm10Int <= 30 -> 1
-            pm10Int <= 80 -> 2
-            pm10Int <= 150 -> 3
-            else -> 4
-        }
-
-        val pm25Grade = when {
-            pm25Int == null -> 0
-            pm25Int <= 15 -> 1
-            pm25Int <= 35 -> 2
-            pm25Int <= 75 -> 3
-            else -> 4
-        }
-
-        val o3Grade = when {
-            o3Double == null -> 0
-            o3Double <= 0.030 -> 1
-            o3Double <= 0.090 -> 2
-            o3Double <= 0.150 -> 3
-            else -> 4
-        }
-        val averageGrade = (pm10Grade + pm25Grade + o3Grade) / 3.0
-
-        return when {
-            averageGrade <= 1 -> "좋음"
-            averageGrade <= 2 -> "보통"
-            averageGrade <= 3 -> "나쁨"
-            else -> "매우 나쁨"
-        }
-    }
-
-    // Fetch the value from the API
-    suspend fun fetchDustInfo(
-        serviceKey: String,
-        city: String,
-        area: String
-    ): Response<DustResponse> {
-        return NetWorkClient.dustNetWork.getDust(
-            serviceKey = serviceKey,
-            returnType = "json",
-            numOfRows = 100,
-            pageNo = 1,
-            sidoName = city,
-            stationName = area,
-            dataTerm = "daily",
-            ver = "1.0"
-        )
-    }
-
     suspend fun fetchTMCoordinate(
         lat_x: Double,
         lng_y: Double
     ): Response<TmCoordinatesResponse> {
-        return KakaoNetworkClient.kakaoNetwork.getTranscoord(
-            lat_x = lat_x,
-            lng_y = lng_y
-        )
+        return kakaoRepository.fetchTMCoordinate(lat_x, lng_y)
     }
 }
