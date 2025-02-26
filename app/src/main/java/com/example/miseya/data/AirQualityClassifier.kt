@@ -1,5 +1,6 @@
 package com.example.miseya.data
 
+// 대기질 분류 유틸 클래스
 object AirQualityClassifier {
     fun classifyAirQuality(pm10Value: String?, pm25Value: String?, o3Value: String?): String
     {
