@@ -16,11 +16,3 @@ object NetWorkClient {
     val dustNetWork: NetWorkInterface = retrofit.create(NetWorkInterface::class.java)
 }
 
-object KakaoNetworkClient {
-    private val retrofit = Retrofit.Builder()
-        .baseUrl("https://dapi.kakao.com/v2/") // base URL 설정
-        .addConverterFactory(GsonConverterFactory.create())
-        .build()
-
-    val kakaoNetwork: KakaoLocalApiService = retrofit.create(KakaoLocalApiService::class.java)
-}
