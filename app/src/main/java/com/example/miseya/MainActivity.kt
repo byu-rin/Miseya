@@ -75,34 +75,46 @@ class MainActivity : ComponentActivity() {
             // 성공 시
             onLocationReceived = { lat, lng ->
                 Log.d("원 좌표 위치", "위치: $lat, $lng")
+
                 lifecycleScope.launch {
-                    val response = viewModel.fetchTMCoordinate(lat, lng)
-                    if (response.isSuccessful) {
-                        val tmResponse = response.body()
+                    val locateResponse = viewModel.fetchTMCoordinate(lat, lng)
+                    if (locateResponse.isSuccessful) {
+                        val tmResponse = locateResponse.body()
                         val tmDoc = tmResponse?.documents?.firstOrNull()
+
                         if (tmDoc != null) {
-                            Toast.makeText(
-                                this@MainActivity,
-                                "TM 좌표 : ${tmDoc.x}, ${tmDoc.y}",
-                                Toast.LENGTH_SHORT
-                            ).show()
-                            viewModel.setSelectedArea(
-                                "${tmDoc.x}, ${tmDoc.y}"
-                            )
+                            val tmX = tmDoc.x
+                            val tmY = tmDoc.y
+                            Log.d("MainActivity", "TM 좌표 변환 결과: $tmX, $tmY")
+
+                            // tm좌표 측정소 정보 요청
+                            val measureResponse = viewModel.fetchMeasureInfo(tmX, tmY)
+
+                            if (measureResponse.isSuccessful) {
+                                val measureData = measureResponse.body()
+                                val nearestStation = measureData?.response?.body?.items?.minByOrNull { it.tm }
+
+                                if (nearestStation != null) {
+                                    val stationName = nearestStation.stationName
+                                    Log.d("측정소 정보", "가장 가까운 측정소: $stationName")
+                                } else {
+                                    Log.e("MainActivity", "측정소 정보 없응")
+                                }
+                            }
                         } else {
                             Toast.makeText(
                                 this@MainActivity,
-                                "TM 좌표 변환 결과 없음",
+                                "TM 좌표 변환 실패: ${locateResponse.code()}",
                                 Toast.LENGTH_LONG
                             ).show()
                         }
                     } else {
                         Toast.makeText(
                             this@MainActivity,
-                            "TM 좌표 변환 실패: ${response.code()}",
+                            "TM 좌표 변환 실패: ${locateResponse.code()}",
                             Toast.LENGTH_LONG
                         ).show()
-                        Log.e("MainActivity", "TM 좌표 변환 실패: ${response.code()}")
+                        Log.e("MainActivity", "TM 좌표 변환 실패: ${locateResponse.code()}")
                     }
                 }
             },

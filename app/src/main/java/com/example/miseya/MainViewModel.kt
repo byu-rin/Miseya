@@ -1,17 +1,16 @@
 package com.example.miseya
 
 import DustItem
-import DustResponse
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.miseya.Api.DustRepository
 import com.example.miseya.Api.KakaoRepository
+import com.example.miseya.Api.MeasureRepository
 import com.example.miseya.data.AirQualityClassifier.classifyAirQuality
+import com.example.miseya.data.MeasureDTO
 import com.example.miseya.data.TmCoordinatesResponse
 import com.example.miseya.data.cityAreas
-import com.example.miseya.retrofit.KakaoNetworkClient
-import com.example.miseya.retrofit.NetWorkClient
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -20,7 +19,8 @@ import retrofit2.Response
 
 class MainViewModel(
     private val dustRepository: DustRepository = DustRepository(),
-    private val kakaoRepository: KakaoRepository = KakaoRepository()
+    private val kakaoRepository: KakaoRepository = KakaoRepository(),
+    private val measureRepository: MeasureRepository = MeasureRepository()
 ) : ViewModel() {
     private val api_key = BuildConfig.API_KEY
 
@@ -78,11 +78,11 @@ class MainViewModel(
             try {
                 // 3. 호출 시작 전 로그 출력
                 Log.d("MainViewModel", "Api 요청 시작 : city=$city, area=$area")
-                val response = dustRepository.fetchDustInfo(api_key, city, area) // 4. api 호출
+                val dust_response = dustRepository.fetchDustInfo(api_key, city, area) // 4. api 호출
                 // 5. api 호출 성공했는지 확인 (HTTP 상태 코드)
-                if (response.isSuccessful) {
+                if (dust_response.isSuccessful) {
                     // 6. 응답 본문이 null 이 아닌 경우 처리
-                    response.body()?.let { dustResponse ->
+                    dust_response.body()?.let { dustResponse ->
                         // 7. 응답 body 부분에서 dust 항목 가져옴.
                         dustResponse.response.body.let { body ->
                             // 8. body 의 dustItem 리스트에서 선택한 area 와 매칭되는 항목 필터링
@@ -108,7 +108,7 @@ class MainViewModel(
                                 Log.i("AirQuality", classification)
                             } else {
                                 // dustItem 리스트가 비어있을 경우, 로그
-                                Log.e("MainViewModel", "Error: ${response.errorBody()?.string()}")
+                                Log.e("MainViewModel", "Error: ${dust_response.errorBody()?.string()}")
                             }
                         }
                     }
@@ -123,10 +123,19 @@ class MainViewModel(
         }
     }
 
-    suspend fun fetchTMCoordinate(
-        lat_x: Double,
-        lng_y: Double
-    ): Response<TmCoordinatesResponse> {
-        return kakaoRepository.fetchTMCoordinate(lat_x, lng_y)
+    suspend fun fetchTMCoordinate(lat_x: Double, lng_y: Double): Response<TmCoordinatesResponse> {
+        Log.d("API 요청", "위도: $lat_x, 경도: $lng_y") // 요청 파라미터 로그
+        val response = kakaoRepository.fetchTMCoordinate(lat_x, lng_y)
+        Log.d("API 응답 코드", "HTTP 응답 코드: ${response.code()}") // 응답 코드 로그
+        Log.d("API 응답 바디", "응답 본문: ${response.body()}") // 응답 내용 로그
+        return response
+    }
+
+
+    suspend fun fetchMeasureInfo(
+        tmX: Double?,
+        tmY: Double?
+    ): Response<MeasureDTO> {
+        return measureRepository.fetchMeasureInfo(tmX, tmY)
     }
 }
