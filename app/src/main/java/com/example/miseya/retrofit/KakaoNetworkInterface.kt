@@ -6,8 +6,8 @@ import retrofit2.Response
 import retrofit2.http.GET
 import retrofit2.http.Headers
 import retrofit2.http.Query
-
-interface KakaoLocalApiService {
+// Retrofit 에서 사용한 api 요청 형식 정의
+interface KakaoNetworkInterface {
     @Headers("Authorization: KakaoAK ${BuildConfig.KAKAO_API_KEY}")
     @GET("local/geo/transcoord.json?")
     suspend fun getTranscoord(

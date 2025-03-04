@@ -4,14 +4,15 @@ import com.example.miseya.data.TmCoordinatesResponse
 import com.example.miseya.retrofit.KakaoNetworkClient
 import retrofit2.Response
 
+// TM 좌표 변환 api 호출 (데이터를 가져오는 중간역할)
 class KakaoRepository {
     suspend fun fetchTMCoordinate(
-        lat_x: Double,
-        lng_y: Double
+        lat: Double,
+        lng: Double
     ): Response<TmCoordinatesResponse> {
         return KakaoNetworkClient.kakaoNetwork.getTranscoord(
-            lat_x = lat_x,
-            lng_y = lng_y
+            lat_x = lat,
+            lng_y = lng
         )
     }
 }
