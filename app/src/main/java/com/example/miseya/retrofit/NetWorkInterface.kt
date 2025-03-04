@@ -1,6 +1,7 @@
 package com.example.miseya.retrofit
 
 import DustResponse
+import com.example.miseya.BuildConfig
 import retrofit2.Response
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
@@ -14,14 +15,14 @@ import retrofit2.http.Query
 interface NetWorkInterface {
     @GET("getCtprvnRltmMesureDnsty")
     suspend fun getDust(
-        @Query("serviceKey") serviceKey: String,
-        @Query("returnType") returnType: String,
-        @Query("numOfRows") numOfRows: Int,
-        @Query("pageNo") pageNo: Int,
+        @Query("serviceKey") serviceKey: String = BuildConfig.API_KEY,
+        @Query("returnType") returnType:String = "json",
+//        @Query("numOfRows") numOfRows: Int,
+//        @Query("pageNo") pageNo: Int,
         @Query("sidoName") sidoName: String,
         @Query("stationName") stationName: String,
-        @Query("dataTerm") dataTerm: String,
-        @Query("ver") ver: String
+//        @Query("dataTerm") dataTerm: String,
+//        @Query("ver") ver: String
     ): Response<DustResponse>
 }
 
