@@ -13,14 +13,14 @@ class DustRepository {
         area: String
     ): Response<DustResponse> {
         return NetWorkClient.dustNetWork.getDust(
-            serviceKey = serviceKey,
-            returnType = "json",
-            numOfRows = 100,
-            pageNo = 1,
+//            serviceKey = serviceKey,
+//            returnType = "json",
+//            numOfRows = 100,
+//            pageNo = 1,
             sidoName = city,
             stationName = area,
-            dataTerm = "daily",
-            ver = "1.0"
+//            dataTerm = "daily",
+//            ver = "1.0"
         )
     }
 }
