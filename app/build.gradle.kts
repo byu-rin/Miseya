@@ -100,6 +100,13 @@ dependencies {
     implementation("io.coil-kt:coil-compose:2.1.0")
     implementation("io.coil-kt:coil-gif:2.1.0")
 
+    // test
+    testImplementation("org.junit.jupiter:junit-jupiter-api:5.8.1")
+    testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:5.8.1")
+    testImplementation("io.mockk:mockk:1.12.0")
+    testImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.6.1")
+    testImplementation("com.squareup.okhttp3:mockwebserver:4.9.3")
+
     dependencies {
         implementation ("com.google.android.gms:play-services-location:21.3.0")
     }
