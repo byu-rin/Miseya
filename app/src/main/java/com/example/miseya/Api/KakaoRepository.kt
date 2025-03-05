@@ -11,8 +11,8 @@ class KakaoRepository {
         lng: Double
     ): Response<TmCoordinatesResponse> {
         return KakaoNetworkClient.kakaoNetwork.getTranscoord(
-            lat_x = lat,
-            lng_y = lng
+            lat_x = lng,
+            lng_y = lat
         )
     }
 }
