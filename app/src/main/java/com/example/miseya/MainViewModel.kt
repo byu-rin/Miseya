@@ -78,7 +78,7 @@ class MainViewModel(
             try {
                 // 3. 호출 시작 전 로그 출력
                 Log.d("MainViewModel", "Api 요청 시작 : city=$city, area=$area")
-                val dust_response = dustRepository.fetchDustInfo(api_key, city, area) // 4. api 호출
+                val dust_response = dustRepository.fetchDustInfo(city, area) // 4. api 호출
                 // 5. api 호출 성공했는지 확인 (HTTP 상태 코드)
                 if (dust_response.isSuccessful) {
                     // 6. 응답 본문이 null 이 아닌 경우 처리
@@ -124,10 +124,10 @@ class MainViewModel(
     }
 
     suspend fun fetchTMCoordinate(lat_x: Double, lng_y: Double): Response<TmCoordinatesResponse> {
-        Log.d("API 요청", "위도: $lat_x, 경도: $lng_y") // 요청 파라미터 로그
+        Log.d("MainViewModel", "API 요청 위도: $lat_x, 경도: $lng_y") // 요청 파라미터 로그
         val response = kakaoRepository.fetchTMCoordinate(lat_x, lng_y)
-        Log.d("API 응답 코드", "HTTP 응답 코드: ${response.code()}") // 응답 코드 로그
-        Log.d("API 응답 바디", "응답 본문: ${response.body()}") // 응답 내용 로그
+        Log.d("MainViewModel", "HTTP 응답 코드: ${response.code()}") // 응답 코드 로그
+        Log.d("MainViewModel", "응답 본문: ${response.body()}") // 응답 내용 로그
         return response
     }
 

@@ -96,7 +96,8 @@ class MainActivity : ComponentActivity() {
 
                                 if (nearestStation != null) {
                                     val stationName = nearestStation.stationName
-                                    Log.d("측정소 정보", "가장 가까운 측정소: $stationName")
+                                    Log.d("MainActivity", "가장 가까운 측정소: $stationName")
+
                                 } else {
                                     Log.e("MainActivity", "측정소 정보 없응")
                                 }
