@@ -20,7 +20,7 @@ import retrofit2.Response
 class MainViewModel(
     private val dustRepository: DustRepository = DustRepository(),
     private val kakaoRepository: KakaoRepository = KakaoRepository(),
-    private val measureRepository: MeasureRepository = MeasureRepository()
+    private val measureRepository: MeasureRepository = MeasureRepository(),
 ) : ViewModel() {
     private val api_key = BuildConfig.API_KEY
 
@@ -123,14 +123,12 @@ class MainViewModel(
         }
     }
 
-    suspend fun fetchTMCoordinate(lat_x: Double, lng_y: Double): Response<TmCoordinatesResponse> {
-        Log.d("MainViewModel", "API 요청 위도: $lat_x, 경도: $lng_y") // 요청 파라미터 로그
-        val response = kakaoRepository.fetchTMCoordinate(lat_x, lng_y)
-        Log.d("MainViewModel", "HTTP 응답 코드: ${response.code()}") // 응답 코드 로그
-        Log.d("MainViewModel", "응답 본문: ${response.body()}") // 응답 내용 로그
-        return response
+    suspend fun fetchTMCoordinate(
+        lat_x: Double,
+        lng_y: Double
+    ): Response<TmCoordinatesResponse> {
+        return kakaoRepository.fetchTMCoordinate(lat_x, lng_y)
     }
-
 
     suspend fun fetchMeasureInfo(
         tmX: Double?,
