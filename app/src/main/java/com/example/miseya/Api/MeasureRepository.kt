@@ -4,7 +4,7 @@ import com.example.miseya.data.MeasureDTO
 import com.example.miseya.retrofit.MeasurementClient
 import retrofit2.Response
 
-// 근처 측정소 api 를 요청. 파라미터 정의
+// 근접 측정소 api 를 요청
 class MeasureRepository {
     suspend fun fetchMeasureInfo(
         tmX: Double?,

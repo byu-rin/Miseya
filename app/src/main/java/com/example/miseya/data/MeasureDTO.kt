@@ -1,4 +1,5 @@
 package com.example.miseya.data
+// 근접 측정소 응답
 data class MeasureDTO(
     val response: MeasureResponse?
 )

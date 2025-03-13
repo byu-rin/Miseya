@@ -12,6 +12,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
+// 사용자 위치 정보 호출
 class LocationRepository(
     private val context: Context,
     private val locationHelper: LocationHelper,
