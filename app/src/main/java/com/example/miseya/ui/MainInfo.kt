@@ -46,14 +46,13 @@ fun MainInfo(viewModel: MainViewModel) {
         val (location, date, data, level, image) = createRefs()
 
         // location 업데이트
-        val locationText = dustData?.let { "${it.sidoName} $selectedArea" } ?: "지역을 선택해주세요."
+        val locationText = dustData?.let { "${it.stationName} $selectedArea" } ?: "지역을 선택해주세요."
         // dataTime 업데이트
         val dateText = dustData?.dataTime ?: ""
         // khaiValue 업데이트
         val dataText = dustData?.khaiValue ?: "0"
 
         Log.d("MainInfo", "LocationText: $locationText, DateText: $dateText, DataText: $dataText")
-        //TODO: LOG 2중으로 찍힘
 
         Text(
             text = locationText,

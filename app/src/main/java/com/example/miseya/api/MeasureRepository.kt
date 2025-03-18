@@ -1,4 +1,4 @@
-package com.example.miseya.Api
+package com.example.miseya.api
 
 import com.example.miseya.data.MeasureDTO
 import com.example.miseya.retrofit.MeasurementClient

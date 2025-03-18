@@ -21,6 +21,8 @@ import com.example.miseya.R
 @Composable
 fun MainContent(viewModel: MainViewModel = MainViewModel()) {
     val airQualityClassification by viewModel.airQualityClassification.collectAsState()
+    // val dustData by viewModel.dustData.collectAsState()
+    // val selectedArea by viewModel.selectedArea.collectAsState()
 
     // 이미지 리소스와 배경색을 설정하는 함수
     val (imageResId, backgroundColor) = when (airQualityClassification) {

@@ -1,12 +1,8 @@
 package com.android.miseya
 
-import android.content.pm.PackageManager
 import android.os.Bundle
-import android.util.Log
-import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material.Surface
@@ -14,15 +10,11 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.core.content.ContextCompat
-import androidx.lifecycle.lifecycleScope
-import com.example.miseya.Api.LocationRepository
+import com.example.miseya.api.LocationRepository
 import com.example.miseya.MainViewModel
 import com.example.miseya.MiseyaTheme
 import com.example.miseya.location.LocationHelper
 import com.example.miseya.ui.MainContent
-import kotlinx.coroutines.launch
-import kotlin.text.Typography.tm
 
 class MainActivity : ComponentActivity() {
     private lateinit var locationRepository: LocationRepository
