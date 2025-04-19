@@ -1,12 +1,13 @@
 package com.example.miseya
 
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Typography
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Typography
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.unit.sp
 
 val notosanskr = FontFamily(
     Font(R.font.notosanskr_bold, FontWeight.Bold),
@@ -17,25 +18,30 @@ val notosanskr = FontFamily(
 )
 
 val AppTypography = Typography(
-    h1 = TextStyle(
+    displayLarge = TextStyle(
         fontFamily = notosanskr,
         fontWeight = FontWeight.Bold,
+        fontSize = 30.sp
     ),
-    h2 = TextStyle(
+    displayMedium = TextStyle(
         fontFamily = notosanskr,
         fontWeight = FontWeight.Normal,
+        fontSize = 24.sp
     ),
-    h3 = TextStyle(
+    displaySmall = TextStyle(
         fontFamily = notosanskr,
         fontWeight = FontWeight.Medium,
+        fontSize = 20.sp
     ),
-    body1 = TextStyle(
+    bodyLarge = TextStyle(
         fontFamily = notosanskr,
         fontWeight = FontWeight.Light,
+        fontSize = 16.sp
     ),
-    body2 = TextStyle(
+    bodyMedium = TextStyle(
         fontFamily = notosanskr,
         fontWeight = FontWeight.Thin,
+        fontSize = 14.sp
     )
 )
 

@@ -6,12 +6,13 @@ import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.Text
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.constraintlayout.compose.ConstraintLayout
@@ -56,7 +57,7 @@ fun MainInfo(viewModel: MainViewModel) {
 
         Text(
             text = locationText,
-            style = AppTypography.h1,
+            style = AppTypography.displayLarge,
             fontSize = 24.sp,
             color = Color.Black,
             modifier = Modifier.constrainAs(location) {
@@ -68,7 +69,7 @@ fun MainInfo(viewModel: MainViewModel) {
 
         Text(
             text = dateText,
-            style = AppTypography.h2,
+            style = AppTypography.displayMedium,
             fontSize = 16.sp,
             color = Color.Black,
             modifier = Modifier.constrainAs(date) {
@@ -90,7 +91,7 @@ fun MainInfo(viewModel: MainViewModel) {
 
         Text(
             text = "$dataText ㎍/㎥",
-            style = AppTypography.body2,
+            style = AppTypography.displayMedium,
             fontSize = 16.sp,
             color = Color.Black,
             modifier = Modifier.constrainAs(data) {
@@ -103,7 +104,7 @@ fun MainInfo(viewModel: MainViewModel) {
         // 수치 레벨 결과 표시
         Text(
             text = airQualityClassification,
-            style = AppTypography.h1,
+            style = AppTypography.displayLarge,
             fontSize = 28.sp,
             color = Color.Black,
             modifier = Modifier.constrainAs(level) {
@@ -114,3 +115,10 @@ fun MainInfo(viewModel: MainViewModel) {
         )
     }
 }
+
+@Preview(showSystemUi = true)
+@Composable
+fun MainInfoPreview() {
+    MainInfo(viewModel = MainViewModel())
+}
+
