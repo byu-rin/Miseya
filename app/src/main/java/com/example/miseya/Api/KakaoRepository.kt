@@ -1,4 +1,4 @@
-package com.example.miseya.api
+package com.example.miseya.Api
 
 import com.example.miseya.data.TmCoordinatesResponse
 import com.example.miseya.retrofit.KakaoNetworkClient

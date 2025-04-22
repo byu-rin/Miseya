@@ -1,6 +1,6 @@
 package com.example.miseya
 
-import com.example.miseya.api.KakaoRepository
+import com.example.miseya.Api.KakaoRepository
 import com.example.miseya.data.Document
 import com.example.miseya.data.Meta
 import com.example.miseya.data.TmCoordinatesResponse
