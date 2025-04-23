@@ -9,17 +9,18 @@
 
 
     <application
+        android:name=".MainApplicatioin"
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
         android:fullBackupContent="@xml/backup_rules"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:supportsRtl="true"
-        android:theme="@style/Theme.Miseya"
+        android:theme="@style/Theme.HeyMise"
         android:usesCleartextTraffic="true"
         tools:targetApi="31">
         <activity
-            android:name="com.android.miseya.MainActivity"
+            android:name="com.android.miseya.AirQualityActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
